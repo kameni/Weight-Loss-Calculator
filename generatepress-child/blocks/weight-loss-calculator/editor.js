@@ -36,6 +36,36 @@
     edit: function Edit(props) {
       const { attributes, setAttributes } = props;
       const blockProps = useBlockProps({ className: 'gp-wlc gp-wlc--editor' });
+      const { attributes, setAttributes, isSelected } = props;
+      const selected = typeof isSelected === 'boolean' ? isSelected : true;
+      const blockProps = useBlockProps({ className: 'gp-wlc gp-wlc--editor' });
+      const rootRef = useRef();
+
+      useEffect(() => {
+        const node = rootRef.current;
+        const $ = window.jQuery;
+        if (!node || !$) return;
+
+        const $wrap = $(node);
+        let min = parseInt(attributes.minWeight || 100, 10);
+        let max = parseInt(attributes.maxWeight || 400, 10);
+        const cur = parseInt(attributes.currentWeight || min, 10);
+
+        if (!isFinite(min)) {
+          min = 0;
+        }
+        if (!isFinite(max)) {
+          max = min + 1;
+        }
+
+        const hasRange = isFinite(max) && isFinite(min) && max > min;
+        const sliderMax = hasRange ? max : min + 1;
+
+        function clampToRange(value) {
+          if (!isFinite(value)) return min;
+          if (!hasRange) return min;
+          return Math.min(Math.max(value, min), max);
+        }
 
       const minWeight = useMemo(() => toNumber(attributes.minWeight, 100), [attributes.minWeight]);
       const maxWeight = useMemo(() => {
@@ -53,10 +83,78 @@
       useEffect(() => {
         if (currentWeight !== attributes.currentWeight) {
           setAttributes({ currentWeight });
+        function computePct(value) {
+          if (!hasRange) return 0;
+          return (value - min) / (max - min);
+        }
+
+        // jQuery UI slider
+        const $slider = $wrap.find('.gp-wlc__slider');
+        const $divider = $wrap.find('.gp-wlc__divider');
+        const $visual  = $wrap.find('.gp-wlc__visual-inner');
+
+        let dragging = false;
+
+        function onMove(clientX) {
+          const rect = $visual[0].getBoundingClientRect();
+          const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+          const pct = rect.width ? x / rect.width : 0;
+          updateScrub($wrap, pct);
+        }
+
+        const down = (e) => { dragging = true; e.preventDefault(); };
+        const up = () => { dragging = false; };
+        const move = (e) => {
+          if (!dragging) return;
+          const cx = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+          onMove(cx);
+        };
+
+        const cleanup = () => {
+          if ($slider.data('uiSlider')) $slider.slider('destroy');
+          $divider.off('mousedown touchstart', down);
+          $(window).off('mousemove touchmove', move).off('mouseup touchend', up);
+        };
+
+        // Always reflect the current weight even if the block is not selected.
+        const loss = Math.round(sliderValue * 0.15);
+        $wrap.find('.gp-wlc__current-weight').text(sliderValue);
+        $wrap.find('.gp-wlc__loss').text('-' + loss);
+        updateScrub($wrap, computePct(sliderValue));
+
+        cleanup();
+
+        if (!selected) {
+          return cleanup;
         }
       }, [currentWeight, attributes.currentWeight, setAttributes]);
 
       const loss = Math.round(currentWeight * 0.15);
+        $slider.slider({
+          min,
+          max: sliderMax,
+          value: sliderValue,
+          slide: function (_e, ui) {
+            const nextValue = clampToRange(ui.value);
+            setAttributes({ currentWeight: nextValue });
+            $wrap.find('.gp-wlc__current-weight').text(nextValue);
+            const lossValue = Math.round(nextValue * 0.15);
+            $wrap.find('.gp-wlc__loss').text('-' + lossValue);
+            updateScrub($wrap, computePct(nextValue));
+          }
+        });
+
+        $divider.on('mousedown touchstart', down);
+        $(window).on('mousemove touchmove', move).on('mouseup touchend', up);
+
+        return cleanup;
+      }, [attributes.minWeight, attributes.maxWeight, attributes.currentWeight, selected, setAttributes]);
+
+      function updateScrub($wrap, pct) {
+        const safe = !isFinite(pct) ? 0 : Math.max(0, Math.min(1, pct));
+        $wrap.find('.gp-wlc__clip').css('width', (safe * 100) + '%');
+        $wrap.find('.gp-wlc__divider').css('left', (safe * 100) + '%');
+      }
 
       const headingStyle = {
         color: attributes.headingColor || undefined,
