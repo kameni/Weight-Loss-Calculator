@@ -287,6 +287,9 @@
           )
         )
       );
+    },
+    save: function Save() {
+      return null;
     }
   });
 })();

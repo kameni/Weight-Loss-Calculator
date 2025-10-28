@@ -9,8 +9,23 @@ add_action('wp_enqueue_scripts', function () {
  * Register Weight Loss Calculator block via its block.json
  */
 add_action('init', function () {
-    $path   = get_theme_file_path('blocks/weight-loss-calculator');
-    $result = register_block_type($path);
+    $path = get_theme_file_path('blocks/weight-loss-calculator');
+
+    if (!file_exists($path . '/render.php')) {
+        error_log('WLC register error: render.php not found for block in ' . $path);
+        return;
+    }
+
+    $render_callback = require $path . '/render.php';
+    if (!is_callable($render_callback)) {
+        error_log('WLC register error: render callback missing or invalid for block in ' . $path);
+        return;
+    }
+
+    $result = register_block_type($path, [
+        'render_callback' => $render_callback,
+    ]);
+
     if (is_wp_error($result)) {
         error_log('WLC register error: ' . $result->get_error_message() . ' (path: ' . $path . ')');
     }

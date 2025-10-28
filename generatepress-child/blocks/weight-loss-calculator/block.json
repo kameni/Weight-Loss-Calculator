@@ -91,6 +91,5 @@
       "type": "string",
       "default": "linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)"
     }
-  },
-  "render": "file:./render.php"
+  }
 }
