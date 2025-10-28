@@ -25,6 +25,15 @@
       const selected = typeof isSelected === 'boolean' ? isSelected : true;
       const blockProps = useBlockProps({ className: 'gp-wlc gp-wlc--editor' });
       const rootRef = useRef();
+      const forwardedRef = blockProps && blockProps.ref;
+      const mergedRef = (node) => {
+        rootRef.current = node;
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(node);
+        } else if (forwardedRef && typeof forwardedRef === 'object') {
+          forwardedRef.current = node;
+        }
+      };
 
       useEffect(() => {
         const node = rootRef.current;
@@ -247,7 +256,7 @@
         inspector,
         el(
           'div',
-          Object.assign({}, blockProps, { ref: rootRef }),
+          Object.assign({}, blockProps, { ref: mergedRef }),
           el('div', { className: 'gp-wlc__grid' },
             el('div', { className: 'gp-wlc__visual' },
               el('div', { className: 'gp-wlc__visual-inner' },
