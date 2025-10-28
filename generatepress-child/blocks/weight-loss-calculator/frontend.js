@@ -136,6 +136,16 @@
   
     // Boot all instances (front-end)
     jQuery(function($){
+      // Skip initialization inside the block editor so the editing UI remains
+      // controllable by the React edit component (otherwise the front-end
+      // slider wiring hijacks events and prevents block selection/removal).
+      if (
+        document.body &&
+        (document.body.classList.contains('block-editor-page') || document.body.classList.contains('wp-admin'))
+      ) {
+        return;
+      }
+
       $('.gp-wlc').each(function(){ init($(this)); });
     });
   })(jQuery);
