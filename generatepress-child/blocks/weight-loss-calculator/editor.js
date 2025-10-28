@@ -9,6 +9,7 @@
   const { InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps } = be || {};
   const { PanelBody, TextControl, SelectControl, ColorPalette, Button } = wp.components || {};
   const UnitControl = (wp.components && (wp.components.__experimentalUnitControl || wp.components.UnitControl)) || null;
+  const useSelect = (wp.data && wp.data.useSelect) || null;
 
   // If any essential API is missing, bail to avoid fatal parse errors in editor.
   if (!InspectorControls || !useBlockProps || !PanelBody || !TextControl || !SelectControl || !ColorPalette || !Button) return;
@@ -21,9 +22,13 @@
 
   registerBlockType('generatepress-child/weight-loss-calculator', {
     edit: function Edit(props) {
-      const { attributes, setAttributes } = props;
+      const { attributes, setAttributes, clientId } = props;
       const blockProps = useBlockProps({ className: 'gp-wlc gp-wlc--editor' });
       const rootRef = useRef();
+      const isSelected = useSelect ? useSelect((select) => {
+        const editor = select('core/block-editor');
+        return editor && editor.isBlockSelected ? editor.isBlockSelected(clientId) : true;
+      }, [clientId]) : true;
 
       useEffect(() => {
         const node = rootRef.current;
@@ -64,24 +69,9 @@
 
         // jQuery UI slider
         const $slider = $wrap.find('.gp-wlc__slider');
-        if ($slider.data('uiSlider')) $slider.slider('destroy');
-        $slider.slider({
-          min,
-          max: sliderMax,
-          value: sliderValue,
-          slide: function (_e, ui) {
-            const nextValue = clampToRange(ui.value);
-            setAttributes({ currentWeight: nextValue });
-            $wrap.find('.gp-wlc__current-weight').text(nextValue);
-            const loss = Math.round(nextValue * 0.15);
-            $wrap.find('.gp-wlc__loss').text('-' + loss);
-            updateScrub($wrap, computePct(nextValue));
-          }
-        });
-
-        // before/after scrub (drag divider)
         const $divider = $wrap.find('.gp-wlc__divider');
         const $visual  = $wrap.find('.gp-wlc__visual-inner');
+
         let dragging = false;
 
         function onMove(clientX) {
@@ -91,29 +81,51 @@
           updateScrub($wrap, pct);
         }
 
-        function down(e) { dragging = true; e.preventDefault(); }
-        function up() { dragging = false; }
-        function move(e) {
+        const down = (e) => { dragging = true; e.preventDefault(); };
+        const up = () => { dragging = false; };
+        const move = (e) => {
           if (!dragging) return;
           const cx = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
           onMove(cx);
-        }
+        };
 
-        $divider.on('mousedown touchstart', down);
-        $(window).on('mousemove touchmove', move).on('mouseup touchend', up);
+        const cleanup = () => {
+          if ($slider.data('uiSlider')) $slider.slider('destroy');
+          $divider.off('mousedown touchstart', down);
+          $(window).off('mousemove touchmove', move).off('mouseup touchend', up);
+        };
 
-        // initial paint
+        // Always reflect the current weight even if the block is not selected.
         const loss = Math.round(sliderValue * 0.15);
         $wrap.find('.gp-wlc__current-weight').text(sliderValue);
         $wrap.find('.gp-wlc__loss').text('-' + loss);
         updateScrub($wrap, computePct(sliderValue));
 
-        return () => {
-          if ($slider.data('uiSlider')) $slider.slider('destroy');
-          $divider.off('mousedown touchstart', down);
-          $(window).off('mousemove touchmove', move).off('mouseup touchend', up);
-        };
-      }, [attributes.minWeight, attributes.maxWeight, attributes.currentWeight]);
+        cleanup();
+
+        if (!isSelected) {
+          return cleanup;
+        }
+
+        $slider.slider({
+          min,
+          max: sliderMax,
+          value: sliderValue,
+          slide: function (_e, ui) {
+            const nextValue = clampToRange(ui.value);
+            setAttributes({ currentWeight: nextValue });
+            $wrap.find('.gp-wlc__current-weight').text(nextValue);
+            const lossValue = Math.round(nextValue * 0.15);
+            $wrap.find('.gp-wlc__loss').text('-' + lossValue);
+            updateScrub($wrap, computePct(nextValue));
+          }
+        });
+
+        $divider.on('mousedown touchstart', down);
+        $(window).on('mousemove touchmove', move).on('mouseup touchend', up);
+
+        return cleanup;
+      }, [attributes.minWeight, attributes.maxWeight, attributes.currentWeight, isSelected, setAttributes]);
 
       function updateScrub($wrap, pct) {
         const safe = !isFinite(pct) ? 0 : Math.max(0, Math.min(1, pct));
