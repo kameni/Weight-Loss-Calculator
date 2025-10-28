@@ -22,9 +22,46 @@ add_action('init', function () {
         return;
     }
 
-    $result = register_block_type($path, [
+    $frontend_handle = 'generatepress-child-weight-loss-calculator-frontend';
+    $frontend_asset = $path . '/frontend.asset.php';
+
+    if (file_exists($frontend_asset)) {
+        $asset = include $frontend_asset;
+
+        if (!wp_script_is('jquery-ui-touch-punch', 'registered')) {
+            wp_register_script(
+                'jquery-ui-touch-punch',
+                'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js',
+                ['jquery', 'jquery-ui-slider'],
+                '0.2.3',
+                true
+            );
+        }
+
+        $dependencies = isset($asset['dependencies']) ? $asset['dependencies'] : [];
+
+        if (!in_array('jquery-ui-touch-punch', $dependencies, true)) {
+            $dependencies[] = 'jquery-ui-touch-punch';
+        }
+
+        wp_register_script(
+            $frontend_handle,
+            get_theme_file_uri('blocks/weight-loss-calculator/frontend.js'),
+            $dependencies,
+            isset($asset['version']) ? $asset['version'] : filemtime($path . '/frontend.js'),
+            true
+        );
+    }
+
+    $args = [
         'render_callback' => $render_callback,
-    ]);
+    ];
+
+    if (wp_script_is($frontend_handle, 'registered')) {
+        $args['view_script_handles'] = [$frontend_handle];
+    }
+
+    $result = register_block_type($path, $args);
 
     if (is_wp_error($result)) {
         error_log('WLC register error: ' . $result->get_error_message() . ' (path: ' . $path . ')');
@@ -49,14 +86,15 @@ add_action('enqueue_block_assets', function () {
     }
 
     if ($should_load) {
-        wp_enqueue_script('jquery-ui-slider');
         wp_enqueue_style('jquery-ui-base', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css', [], '1.13.2');
-        wp_enqueue_script(
-            'jquery-ui-touch-punch',
-            'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js',
-            ['jquery', 'jquery-ui-slider'],
-            '0.2.3',
-            true
-        );
     }
+});
+
+add_action('enqueue_block_editor_assets', function () {
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('jquery-ui-slider');
+    if (wp_script_is('jquery-ui-touch-punch', 'registered')) {
+        wp_enqueue_script('jquery-ui-touch-punch');
+    }
+    wp_enqueue_style('jquery-ui-base', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css', [], '1.13.2');
 });
