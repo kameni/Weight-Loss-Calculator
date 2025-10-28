@@ -31,22 +31,51 @@
         if (!node || !$) return;
 
         const $wrap = $(node);
-        const min = parseInt(attributes.minWeight || 100, 10);
-        const max = parseInt(attributes.maxWeight || 400, 10);
+        let min = parseInt(attributes.minWeight || 100, 10);
+        let max = parseInt(attributes.maxWeight || 400, 10);
         const cur = parseInt(attributes.currentWeight || min, 10);
+
+        if (!isFinite(min)) {
+          min = 0;
+        }
+        if (!isFinite(max)) {
+          max = min + 1;
+        }
+
+        const hasRange = isFinite(max) && isFinite(min) && max > min;
+        const sliderMax = hasRange ? max : min + 1;
+
+        function clampToRange(value) {
+          if (!isFinite(value)) return min;
+          if (!hasRange) return min;
+          return Math.min(Math.max(value, min), max);
+        }
+
+        const sliderValue = clampToRange(cur);
+
+        if (cur !== sliderValue) {
+          setAttributes({ currentWeight: sliderValue });
+        }
+
+        function computePct(value) {
+          if (!hasRange) return 0;
+          return (value - min) / (max - min);
+        }
 
         // jQuery UI slider
         const $slider = $wrap.find('.gp-wlc__slider');
         if ($slider.data('uiSlider')) $slider.slider('destroy');
         $slider.slider({
-          min, max, value: cur,
+          min,
+          max: sliderMax,
+          value: sliderValue,
           slide: function (_e, ui) {
-            setAttributes({ currentWeight: ui.value });
-            $wrap.find('.gp-wlc__current-weight').text(ui.value);
-            const loss = Math.round(ui.value * 0.15);
+            const nextValue = clampToRange(ui.value);
+            setAttributes({ currentWeight: nextValue });
+            $wrap.find('.gp-wlc__current-weight').text(nextValue);
+            const loss = Math.round(nextValue * 0.15);
             $wrap.find('.gp-wlc__loss').text('-' + loss);
-            const pct = (ui.value - min) / (max - min);
-            updateScrub($wrap, pct);
+            updateScrub($wrap, computePct(nextValue));
           }
         });
 
@@ -58,7 +87,7 @@
         function onMove(clientX) {
           const rect = $visual[0].getBoundingClientRect();
           const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-          const pct = x / rect.width;
+          const pct = rect.width ? x / rect.width : 0;
           updateScrub($wrap, pct);
         }
 
@@ -74,9 +103,10 @@
         $(window).on('mousemove touchmove', move).on('mouseup touchend', up);
 
         // initial paint
-        const loss = Math.round(cur * 0.15);
+        const loss = Math.round(sliderValue * 0.15);
+        $wrap.find('.gp-wlc__current-weight').text(sliderValue);
         $wrap.find('.gp-wlc__loss').text('-' + loss);
-        updateScrub($wrap, (cur - min) / (max - min));
+        updateScrub($wrap, computePct(sliderValue));
 
         return () => {
           if ($slider.data('uiSlider')) $slider.slider('destroy');
@@ -86,8 +116,9 @@
       }, [attributes.minWeight, attributes.maxWeight, attributes.currentWeight]);
 
       function updateScrub($wrap, pct) {
-        $wrap.find('.gp-wlc__clip').css('width', (pct * 100) + '%');
-        $wrap.find('.gp-wlc__divider').css('left', (pct * 100) + '%');
+        const safe = !isFinite(pct) ? 0 : Math.max(0, Math.min(1, pct));
+        $wrap.find('.gp-wlc__clip').css('width', (safe * 100) + '%');
+        $wrap.find('.gp-wlc__divider').css('left', (safe * 100) + '%');
       }
 
       const headingStyle = {

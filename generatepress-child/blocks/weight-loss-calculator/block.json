@@ -5,33 +5,92 @@
   "category": "design",
   "icon": "performance",
   "description": "Interactive weight loss calculator with slider, animated result, before/after scrub, and CTA.",
-  "keywords": ["weight", "loss", "calculator", "before after"],
+  "keywords": [
+    "weight",
+    "loss",
+    "calculator",
+    "before after"
+  ],
   "textdomain": "generatepress-child",
   "style": "file:./style.css",
   "editorStyle": "file:./editor.css",
-  "editorScript": ["wp-blocks", "wp-element", "wp-components", "wp-block-editor", "file:./editor.js"],
-  "script": ["jquery", "jquery-ui-slider", "file:./frontend.js"],
-  "supports": { "align": ["wide", "full"], "spacing": { "padding": true, "margin": true } },
+  "editorScript": "file:./editor.js",
+  "script": "file:./frontend.js",
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "padding": true,
+      "margin": true
+    }
+  },
   "attributes": {
-    "heading": { "type": "string", "default": "How much weight can you lose" },
-    "headingTag": { "type": "string", "default": "h2" },
-    "headingColor": { "type": "string", "default": "" },
-    "headingFontSize": { "type": "string", "default": "" },
-
-    "buttonText": { "type": "string", "default": "Get started" },
-    "buttonUrl": { "type": "string", "default": "#" },
-    "supportingText": { "type": "string", "default": "Get pre-approved in under 90 seconds!" },
-    "supportingColor": { "type": "string", "default": "" },
-    "supportingFontSize": { "type": "string", "default": "" },
-
-    "beforeImage": { "type": "object", "default": { "url": "" } },
-    "afterImage":  { "type": "object", "default": { "url": "" } },
-
-    "minWeight": { "type": "number", "default": 100 },
-    "maxWeight": { "type": "number", "default": 400 },
-    "currentWeight": { "type": "number", "default": 288 },
-
-    "gradientBg": { "type": "string", "default": "linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)" }
+    "heading": {
+      "type": "string",
+      "default": "How much weight can you lose"
+    },
+    "headingTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "headingColor": {
+      "type": "string",
+      "default": ""
+    },
+    "headingFontSize": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Get started"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "supportingText": {
+      "type": "string",
+      "default": "Get pre-approved in under 90 seconds!"
+    },
+    "supportingColor": {
+      "type": "string",
+      "default": ""
+    },
+    "supportingFontSize": {
+      "type": "string",
+      "default": ""
+    },
+    "beforeImage": {
+      "type": "object",
+      "default": {
+        "url": ""
+      }
+    },
+    "afterImage": {
+      "type": "object",
+      "default": {
+        "url": ""
+      }
+    },
+    "minWeight": {
+      "type": "number",
+      "default": 100
+    },
+    "maxWeight": {
+      "type": "number",
+      "default": 400
+    },
+    "currentWeight": {
+      "type": "number",
+      "default": 288
+    },
+    "gradientBg": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)"
+    }
   },
   "render": "file:./render.php"
 }
