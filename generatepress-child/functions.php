@@ -35,9 +35,13 @@ add_action('init', function () {
  * Load jQuery UI Slider (editor + front) only when needed.
  */
 add_action('enqueue_block_assets', function () {
-    $should_load = is_admin();
+    if (is_admin()) {
+        return;
+    }
 
-    if (!$should_load && is_singular()) {
+    $should_load = false;
+
+    if (is_singular()) {
         $post = get_post();
         if ($post && has_block('generatepress-child/weight-loss-calculator', $post)) {
             $should_load = true;
