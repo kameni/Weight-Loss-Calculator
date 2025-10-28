@@ -1,3 +1,10 @@
 /* Editor-only styles to keep preview tidy */
 .gp-wlc--editor { background: var(--gp-wlc-bg, linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)); border-radius: 18px; padding: clamp(16px,3vw,28px); color:#fff; }
 .gp-wlc--editor .gp-wlc__visual-inner { min-height: 260px; }
+.gp-wlc--editor[data-wlc-selected="false"] .gp-wlc__visual-inner,
+.gp-wlc--editor[data-wlc-selected="false"] .gp-wlc__slider,
+.gp-wlc--editor[data-wlc-selected="false"] .gp-wlc__divider,
+.gp-wlc--editor[data-wlc-selected="false"] .gp-wlc__knob,
+.gp-wlc--editor[data-wlc-selected="false"] .gp-wlc__cta {
+  pointer-events: none;
+}
