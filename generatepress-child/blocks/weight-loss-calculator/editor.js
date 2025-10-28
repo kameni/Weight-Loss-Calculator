@@ -9,7 +9,6 @@
   const { InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps } = be || {};
   const { PanelBody, TextControl, SelectControl, ColorPalette, Button } = wp.components || {};
   const UnitControl = (wp.components && (wp.components.__experimentalUnitControl || wp.components.UnitControl)) || null;
-  const useSelect = (wp.data && wp.data.useSelect) || null;
 
   // If any essential API is missing, bail to avoid fatal parse errors in editor.
   if (!InspectorControls || !useBlockProps || !PanelBody || !TextControl || !SelectControl || !ColorPalette || !Button) return;
@@ -22,13 +21,10 @@
 
   registerBlockType('generatepress-child/weight-loss-calculator', {
     edit: function Edit(props) {
-      const { attributes, setAttributes, clientId } = props;
+      const { attributes, setAttributes, isSelected } = props;
+      const selected = typeof isSelected === 'boolean' ? isSelected : true;
       const blockProps = useBlockProps({ className: 'gp-wlc gp-wlc--editor' });
       const rootRef = useRef();
-      const isSelected = useSelect ? useSelect((select) => {
-        const editor = select('core/block-editor');
-        return editor && editor.isBlockSelected ? editor.isBlockSelected(clientId) : true;
-      }, [clientId]) : true;
 
       useEffect(() => {
         const node = rootRef.current;
@@ -103,7 +99,7 @@
 
         cleanup();
 
-        if (!isSelected) {
+        if (!selected) {
           return cleanup;
         }
 
@@ -125,7 +121,7 @@
         $(window).on('mousemove touchmove', move).on('mouseup touchend', up);
 
         return cleanup;
-      }, [attributes.minWeight, attributes.maxWeight, attributes.currentWeight, isSelected, setAttributes]);
+      }, [attributes.minWeight, attributes.maxWeight, attributes.currentWeight, selected, setAttributes]);
 
       function updateScrub($wrap, pct) {
         const safe = !isFinite(pct) ? 0 : Math.max(0, Math.min(1, pct));
