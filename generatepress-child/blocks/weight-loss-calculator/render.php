@@ -66,7 +66,9 @@ return function ($attributes, $content, $block) {
       <div class="gp-wlc__grid">
         <div class="gp-wlc__visual">
           <div class="gp-wlc__visual-inner">
-            <img class="gp-wlc__img gp-wlc__img--after" src="<?php echo $after_url; ?>" alt="After">
+            <div class="gp-wlc__after">
+              <img class="gp-wlc__img gp-wlc__img--after" src="<?php echo $after_url; ?>" alt="After">
+            </div>
             <div class="gp-wlc__clip">
               <img class="gp-wlc__img gp-wlc__img--before" src="<?php echo $before_url; ?>" alt="Before">
             </div>
