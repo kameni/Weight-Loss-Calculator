@@ -1,5 +1,5 @@
 /* Editor-only styles to keep preview tidy */
-.gp-wlc--editor { background: var(--gp-wlc-bg, linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)); border-radius: 18px; padding: clamp(16px,3vw,28px); color:#fff; }
+.gp-wlc--editor { background: var(--gp-wlc-bg, linear-gradient(118deg,#ffb886 0%, #f87455 52%, #c12a78 100%)); border-radius: 18px; padding: clamp(16px,3vw,28px); color:#fff; }
 .gp-wlc--editor .gp-wlc__visual-inner { min-height: 260px; }
 .gp-wlc__image-field { display: flex; flex-direction: column; gap: 8px; }
 .gp-wlc__image-preview { position: relative; border: 1px solid #dcdcde; border-radius: 4px; overflow: hidden; background: #f6f7f7; min-height: 120px; display: flex; align-items: center; justify-content: center; }

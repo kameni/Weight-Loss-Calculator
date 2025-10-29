@@ -2,7 +2,7 @@
   .gp-wlc {
     --gp-wlc-pad: clamp(16px, 3vw, 28px);
     --gp-wlc-radius: 18px;
-    --gp-wlc-bg: linear-gradient(135deg,#FFBB8E 0%, #F0532C 100%);
+    --gp-wlc-bg: linear-gradient(118deg, #FFB886 0%, #F87455 52%, #C12A78 100%);
     --gp-wlc-accent: #ba2365;
     --gp-wlc-accent-soft: rgba(255, 255, 255, 0.32);
     background: var(--gp-wlc-bg);
