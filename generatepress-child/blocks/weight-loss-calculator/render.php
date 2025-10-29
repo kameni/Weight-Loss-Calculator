@@ -72,7 +72,7 @@ return function ($attributes, $content, $block) {
             </div>
             <div class="gp-wlc__divider">
               <button class="gp-wlc__knob" type="button" aria-label="Drag to compare before/after">
-                <span class="gp-wlc__chevrons">‹ ›</span>
+                <span class="gp-wlc__chevrons" aria-hidden="true">‹ ›</span>
               </button>
             </div>
             <span class="gp-wlc__label gp-wlc__label--before">Before</span>
