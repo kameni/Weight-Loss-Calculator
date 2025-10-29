@@ -19,7 +19,7 @@ return function ($attributes, $content, $block) {
         'minWeight' => 100,
         'maxWeight' => 400,
         'currentWeight' => 288,
-        'gradientBg' => 'linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)',
+        'gradientBg' => 'linear-gradient(90deg,#ffc107 0%, #f68f77 52%, #f57e73 100%)',
     ]);
 
     $before_url = !empty($attrs['beforeImage']['url'])
