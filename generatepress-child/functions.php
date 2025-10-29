@@ -97,4 +97,18 @@ add_action('enqueue_block_editor_assets', function () {
         wp_enqueue_script('jquery-ui-touch-punch');
     }
     wp_enqueue_style('jquery-ui-base', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css', [], '1.13.2');
+
+    $handle = 'generatepress-child-weight-loss-calculator-editor';
+    if (wp_script_is($handle, 'registered') && !wp_script_is($handle, 'enqueued')) {
+        wp_enqueue_script($handle);
+    }
+
+    if (wp_script_is($handle, 'enqueued')) {
+        wp_localize_script($handle, 'generatepressChildWlc', [
+            'placeholders' => [
+                'before' => get_theme_file_uri('blocks/weight-loss-calculator/placeholders/before.jpg'),
+                'after'  => get_theme_file_uri('blocks/weight-loss-calculator/placeholders/after.jpg'),
+            ],
+        ]);
+    }
 });

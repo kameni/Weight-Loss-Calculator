@@ -24,6 +24,7 @@
       const { attributes, setAttributes, isSelected } = props;
       const selected = typeof isSelected === 'boolean' ? isSelected : true;
       const blockProps = useBlockProps({ className: 'gp-wlc gp-wlc--editor' });
+      const placeholders = (window.generatepressChildWlc && window.generatepressChildWlc.placeholders) || {};
       const rootRef = useRef();
       const forwardedRef = blockProps && blockProps.ref;
       const mergedRef = (node) => {
@@ -145,6 +146,56 @@
       const HeadingTag = attributes.headingTag || 'h2';
 
       // Inspector panels
+      const renderImageControl = (type, label) => {
+        const key = type + 'Image';
+        const current = attributes[key] || {};
+        const fallback = placeholders[type] || '';
+        const url = (current && current.url) || fallback || '';
+        const hasSelection = !!(current && current.url);
+
+        return el(
+          'div',
+          { className: 'gp-wlc__image-field' },
+          el(
+            'div',
+            { className: 'gp-wlc__image-preview' },
+            url
+              ? el('img', { src: url, alt: label + ' preview' })
+              : el('div', { className: 'gp-wlc__image-preview--empty' }, 'No image selected')
+          ),
+          el(
+            'div',
+            { className: 'gp-wlc__image-actions' },
+            el(
+              MediaUploadCheck,
+              null,
+              el(MediaUpload, {
+                onSelect: (media) => setAttributes({ [key]: { url: media && media.url ? media.url : '', id: media && media.id ? media.id : undefined } }),
+                allowedTypes: ['image'],
+                render: ({ open }) => el(
+                  Button,
+                  { onClick: open, variant: 'secondary' },
+                  hasSelection ? 'Replace ' + label : 'Select ' + label
+                )
+              })
+            ),
+            hasSelection
+              ? el(
+                  Button,
+                  {
+                    variant: 'tertiary',
+                    onClick: () => setAttributes({ [key]: { url: '', id: undefined } })
+                  },
+                  'Remove'
+                )
+              : null
+          ),
+          !hasSelection && fallback
+            ? el('p', { className: 'description gp-wlc__image-note' }, 'Showing placeholder until an image is selected.')
+            : null
+        );
+      };
+
       const inspector = el(
         InspectorControls,
         null,
@@ -209,21 +260,9 @@
         el(
           PanelBody,
           { title: 'Images', initialOpen: false },
-          el(MediaUploadCheck, null,
-            el(MediaUpload, {
-              onSelect: (m) => setAttributes({ beforeImage: { url: m.url, id: m.id } }),
-              allowedTypes: ['image'],
-              render: ({ open }) => el(Button, { onClick: open, variant: 'secondary' }, 'Select Before Image')
-            })
-          ),
-          el('div', { style: { height: '8px' } }),
-          el(MediaUploadCheck, null,
-            el(MediaUpload, {
-              onSelect: (m) => setAttributes({ afterImage: { url: m.url, id: m.id } }),
-              allowedTypes: ['image'],
-              render: ({ open }) => el(Button, { onClick: open, variant: 'secondary' }, 'Select After Image')
-            })
-          )
+          renderImageControl('before', 'Before Image'),
+          el('div', { style: { height: '12px' } }),
+          renderImageControl('after', 'After Image')
         ),
         el(
           PanelBody,
