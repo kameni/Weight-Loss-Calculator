@@ -91,7 +91,13 @@
         $el.text('-' + value);
       }
 
-      let lastValue = clampToRange(current);
+      let lastValue = normalizeValue(current);
+
+      function normalizeValue(value){
+        const clamped = clampToRange(value);
+        const rounded = Math.round(clamped);
+        return clampToRange(rounded);
+      }
 
       function updateUI(value, options){
         const opts = $.extend({
@@ -100,16 +106,16 @@
           clipPct: null
         }, options);
 
-        const clamped = clampToRange(value);
+        const normalized = normalizeValue(value);
         if (opts.updateSlider && $slider.data('ui-slider')) {
-          $slider.slider('value', clamped);
+          $slider.slider('value', normalized);
         }
 
-        $weight.text(clamped);
-        $slider.attr('aria-valuenow', clamped);
+        $weight.text(normalized);
+        $slider.attr('aria-valuenow', normalized);
 
-        const potential = Math.round(clamped * 0.15);
-        if (opts.animateLoss && clamped !== lastValue) {
+        const potential = Math.round(normalized * 0.15);
+        if (opts.animateLoss && normalized !== lastValue) {
           animateNumber($loss, potential, 400);
         } else {
           setLossInstant($loss, potential);
@@ -117,24 +123,25 @@
 
         const pct = opts.clipPct !== null
           ? opts.clipPct
-          : (hasRange ? 1 - safePct(clamped) : 0);
+          : (hasRange ? 1 - safePct(normalized) : 0);
         setClip(pct);
 
-        $cta.attr('data-weight', clamped);
-        lastValue = clamped;
+        $cta.attr('data-weight', normalized);
+        lastValue = normalized;
       }
   
       // jQuery UI Slider for weight input
       $slider.slider({
         min: min,
         max: sliderMax,
-        value: clampToRange(current),
+        step: 1,
+        value: normalizeValue(current),
         range: 'min',
         slide: function(_e, ui){
           const value = clampToRange(ui.value);
           updateUI(value, {
             updateSlider: false,
-            animateLoss: true
+            animateLoss: false
           });
         }
       });
