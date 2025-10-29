@@ -12,7 +12,7 @@
   /* Two-column grid: visual | controls */
   .gp-wlc__grid {
     display: grid;                   /* grid per requirement */
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
     gap: clamp(16px, 3vw, 32px);
     align-items: center;
   }
@@ -26,61 +26,116 @@
   /* Visual before/after area */
   .gp-wlc__visual {
     background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 12px;
+    border-radius: 16px;
+    padding: clamp(14px, 2.4vw, 22px);
   }
   .gp-wlc__visual-inner {
     position: relative;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 14px;
     background: #fff;
-    min-height: clamp(220px, 35vw, 420px); /* responsive height */
+    min-height: clamp(240px, 32vw, 420px); /* responsive height */
+    aspect-ratio: 4 / 3;
   }
   .gp-wlc__img {
-    display: block;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     user-select: none;
     pointer-events: none;
   }
+  .gp-wlc__img--after { z-index: 1; }
   .gp-wlc__clip {
     position: absolute;
     top: 0; left: 0; bottom: 0;
     width: 50%;                       /* default split, JS updates */
     overflow: hidden;
+    z-index: 2;
   }
+  .gp-wlc__clip .gp-wlc__img { z-index: 2; }
   .gp-wlc__divider {
     position: absolute;
     top: 0; bottom: 0;
     left: 50%;
+    width: 0;
+    transform: translateX(-1px);
+  }
+  .gp-wlc__divider::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     width: 2px;
-    background: rgba(255,102,51,0.9);
-    box-shadow: 0 0 10px rgba(0,0,0,0.18);
+    margin-left: -1px;
+    background: linear-gradient(180deg, rgba(255,102,51,0.65) 0%, rgba(186,35,101,0.85) 100%);
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
   }
   .gp-wlc__knob {
     position: absolute;
-    left: 50%;
+    left: 0;
     top: 50%;
-    transform: translate(-50%,-50%);
-    width: 36px; height: 36px;
-    border-radius: 999px;
-    background: #fff;
-    border: 2px solid #f06a48;
+    transform: translate(-50%, -50%);
+    width: clamp(44px, 6vw, 54px);
+    height: clamp(44px, 6vw, 54px);
+    border-radius: 50%;
+    background: linear-gradient(#fff, #fff) padding-box,
+                linear-gradient(135deg, rgba(255,176,133,0.95), rgba(186,35,101,0.95)) border-box;
+    border: 3px solid transparent;
     cursor: ew-resize;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .gp-wlc__chevrons { color: #f06a48; font-weight: 700; }
+  .gp-wlc__chevrons {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 0; /* hide glyph characters */
+  }
+  .gp-wlc__chevrons::before,
+  .gp-wlc__chevrons::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+  }
+  .gp-wlc__chevrons::before {
+    border-right: 8px solid #ba2365;
+  }
+  .gp-wlc__chevrons::after {
+    border-left: 8px solid #ba2365;
+  }
   
   .gp-wlc__label {
     position: absolute;
-    bottom: 12px;
-    padding: 6px 12px;
+    bottom: clamp(14px, 3vw, 24px);
+    padding: 8px 18px;
     border-radius: 999px;
-    background: rgba(0,0,0,0.6);
-    font-size: 13px;
+    font-size: clamp(12px, 1.8vw, 15px);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 4;
   }
-  .gp-wlc__label--before { left: 12px; }
-  .gp-wlc__label--after  { right: 12px; }
+  .gp-wlc__label--before {
+    left: clamp(14px, 3vw, 24px);
+    color: #3e3d42;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 6px 18px rgba(24, 27, 44, 0.15);
+  }
+  .gp-wlc__label--after  {
+    right: clamp(14px, 3vw, 24px);
+    color: #fff;
+    background: #7a1f4f;
+    box-shadow: 0 6px 18px rgba(122, 31, 79, 0.35);
+  }
   
   /* Controls */
   .gp-wlc__heading {
