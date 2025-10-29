@@ -129,6 +129,7 @@
         min: min,
         max: sliderMax,
         value: clampToRange(current),
+        range: 'min',
         slide: function(_e, ui){
           const value = clampToRange(ui.value);
           updateUI(value, {
