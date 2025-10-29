@@ -87,22 +87,30 @@ return function ($attributes, $content, $block) {
             <?php echo esc_html($attrs['heading']); ?>
           </<?php echo $tag; ?>>
 
-          <div class="gp-wlc__field">
-            <label class="gp-wlc__labeltext">Your current weight:</label>
-            <div class="gp-wlc__value">
-              <span class="gp-wlc__current-weight"><?php echo (int) $attrs['currentWeight']; ?></span> lbs
+          <div class="gp-wlc__fields">
+            <div class="gp-wlc__field gp-wlc__field--current">
+              <div class="gp-wlc__field-heading">
+                <span class="gp-wlc__labeltext">Your current weight:</span>
+                <span class="gp-wlc__value">
+                  <span class="gp-wlc__value-number gp-wlc__current-weight"><?php echo (int) $attrs['currentWeight']; ?></span>
+                  <span class="gp-wlc__value-unit">lbs</span>
+                </span>
+              </div>
+              <div class="gp-wlc__slider"
+                   role="slider"
+                   aria-valuemin="<?php echo (int) $attrs['minWeight']; ?>"
+                   aria-valuemax="<?php echo (int) $attrs['maxWeight']; ?>"
+                   aria-valuenow="<?php echo (int) $attrs['currentWeight']; ?>"></div>
             </div>
-            <div class="gp-wlc__slider"
-                 role="slider"
-                 aria-valuemin="<?php echo (int) $attrs['minWeight']; ?>"
-                 aria-valuemax="<?php echo (int) $attrs['maxWeight']; ?>"
-                 aria-valuenow="<?php echo (int) $attrs['currentWeight']; ?>"></div>
-          </div>
 
-          <div class="gp-wlc__field">
-            <label class="gp-wlc__labeltext">Weight loss potential:</label>
-            <div class="gp-wlc__value gp-wlc__value--accent">
-              <span class="gp-wlc__loss">-0</span> lbs
+            <div class="gp-wlc__field gp-wlc__field--loss">
+              <div class="gp-wlc__field-heading">
+                <span class="gp-wlc__labeltext">Weight loss potential:</span>
+                <span class="gp-wlc__value gp-wlc__value--accent">
+                  <span class="gp-wlc__value-number gp-wlc__loss">-0</span>
+                  <span class="gp-wlc__value-unit">lbs</span>
+                </span>
+              </div>
             </div>
           </div>
 
