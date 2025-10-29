@@ -24,11 +24,11 @@ return function ($attributes, $content, $block) {
 
     $before_url = !empty($attrs['beforeImage']['url'])
       ? esc_url($attrs['beforeImage']['url'])
-      : esc_url(get_stylesheet_directory_uri() . '/blocks/weight-loss-calculator/placeholders/before.jpg');
+      : esc_url(get_theme_file_uri('blocks/weight-loss-calculator/placeholders/before.jpg'));
 
     $after_url = !empty($attrs['afterImage']['url'])
       ? esc_url($attrs['afterImage']['url'])
-      : esc_url(get_stylesheet_directory_uri() . '/blocks/weight-loss-calculator/placeholders/after.jpg');
+      : esc_url(get_theme_file_uri('blocks/weight-loss-calculator/placeholders/after.jpg'));
 
     $uid = 'gp-wlc-' . wp_generate_uuid4();
 

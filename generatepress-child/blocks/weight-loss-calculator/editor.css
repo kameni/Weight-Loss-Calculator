@@ -1,3 +1,9 @@
 /* Editor-only styles to keep preview tidy */
 .gp-wlc--editor { background: var(--gp-wlc-bg, linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)); border-radius: 18px; padding: clamp(16px,3vw,28px); color:#fff; }
 .gp-wlc--editor .gp-wlc__visual-inner { min-height: 260px; }
+.gp-wlc__image-field { display: flex; flex-direction: column; gap: 8px; }
+.gp-wlc__image-preview { position: relative; border: 1px solid #dcdcde; border-radius: 4px; overflow: hidden; background: #f6f7f7; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+.gp-wlc__image-preview img { display: block; max-width: 100%; height: auto; }
+.gp-wlc__image-preview--empty { color: #50575e; font-size: 13px; text-align: center; padding: 16px; }
+.gp-wlc__image-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.gp-wlc__image-note { margin: 0; color: #50575e; }
