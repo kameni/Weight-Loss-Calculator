@@ -88,7 +88,7 @@
     },
     "gradientBg": {
       "type": "string",
-      "default": "linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%)"
+      "default": "linear-gradient(90deg,#ffc107 0%, #f68f77 52%, #f57e73 100%)"
     }
   }
 }
