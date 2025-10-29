@@ -1,11 +1,11 @@
 /* Global wrapper with gradient background pulled from inline var */
   .gp-wlc {
     --gp-wlc-pad: clamp(16px, 3vw, 28px);
-    --gp-wlc-radius: 18px;
-    --gp-wlc-bg: linear-gradient(118deg, #FFB886 0%, #F87455 52%, #C12A78 100%);
+    --gp-wlc-radius: 24px;
+    --gp-wlc-bg: linear-gradient(62.5deg, #FFBB8E 14.27%, #F0532C 146.87%);
     --gp-wlc-accent: #ba2365;
     --gp-wlc-accent-soft: rgba(255, 255, 255, 0.32);
-    background: var(--gp-wlc-bg);
+    background: linear-gradient(62.5deg, #FFBB8E 14.27%, #F0532C 146.87%);
     border-radius: var(--gp-wlc-radius);
     padding: var(--gp-wlc-pad);
     color: #fff;
@@ -139,7 +139,7 @@
 
   .gp-wlc__label {
     position: absolute;
-    bottom: clamp(16px, 2.5vw, 28px);
+    bottom: clamp(16px, 2.5vw, 20px);
     padding: 4px 12px;
     border-radius: 999px;
     font-size: 12px;
@@ -274,12 +274,12 @@
   .gp-wlc__slider .ui-slider-handle {
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 26px;
-    height: 26px;
+    width: 1.5em !important;
+    height: 1.5em !important;
     border-radius: 50%;
     background: #fff;
     border: 3px solid #fff;
-    box-shadow: 0 0 0 3px var(--gp-wlc-accent), 0 6px 16px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 2px var(--gp-wlc-accent), 0 6px 16px rgba(0, 0, 0, 0.25);
     top: 2px !important;
     z-index: 10000;
   }
@@ -297,7 +297,11 @@
     gap: 8px;
   }
   .gp-wlc__cta {
-    min-width: 240px;
+    width: 396px;
+    height: 63px;
+    background: #92245A;
+    box-shadow: 0px 15px 40px -4px rgba(146, 36, 90, 0.2), 0px 4px 8px -2px rgba(146, 36, 90, 0.25) !important;
+    border-radius: 64px !important;
   }
   .gp-wlc__cta:hover {  }
   .gp-wlc__support {
