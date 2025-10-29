@@ -70,13 +70,16 @@
       const $loss    = $root.find('.gp-wlc__loss');
       const $visual  = $root.find('.gp-wlc__visual-inner');
       const $clip    = $root.find('.gp-wlc__clip');
+      const $afterWrap = $root.find('.gp-wlc__after');
       const $divider = $root.find('.gp-wlc__divider');
       const $cta     = $root.find('.gp-wlc__cta');
 
       function setClip(pct){
         const pctSafe = Math.min(Math.max(pct, 0), 1) * 100;
-        $clip.css('width', pctSafe + '%');
-        $divider.css('left', pctSafe + '%');
+        const pctValue = pctSafe + '%';
+        $clip.css('width', pctValue);
+        $afterWrap.css('left', pctValue);
+        $divider.css('left', pctValue);
       }
 
       function setLossInstant($el, value){

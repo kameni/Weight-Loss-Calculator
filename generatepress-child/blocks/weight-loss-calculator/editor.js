@@ -135,8 +135,10 @@
 
       function updateScrub($wrap, pct) {
         const safe = !isFinite(pct) ? 0 : Math.max(0, Math.min(1, pct));
-        $wrap.find('.gp-wlc__clip').css('width', (safe * 100) + '%');
-        $wrap.find('.gp-wlc__divider').css('left', (safe * 100) + '%');
+        const pctValue = (safe * 100) + '%';
+        $wrap.find('.gp-wlc__clip').css('width', pctValue);
+        $wrap.find('.gp-wlc__after').css('left', pctValue);
+        $wrap.find('.gp-wlc__divider').css('left', pctValue);
       }
 
       const headingStyle = {
