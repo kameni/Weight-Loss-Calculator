@@ -65,13 +65,61 @@
         return (value - min) / (max - min);
       }
   
-      const $slider = $root.find('.gp-wlc__slider');
-      const $weight = $root.find('.gp-wlc__current-weight');
-      const $loss   = $root.find('.gp-wlc__loss');
-      const $visual = $root.find('.gp-wlc__visual-inner');
-      const $clip   = $root.find('.gp-wlc__clip');
-      const $divider= $root.find('.gp-wlc__divider');
-      const $cta    = $root.find('.gp-wlc__cta');
+      const $slider  = $root.find('.gp-wlc__slider');
+      const $weight  = $root.find('.gp-wlc__current-weight');
+      const $loss    = $root.find('.gp-wlc__loss');
+      const $visual  = $root.find('.gp-wlc__visual-inner');
+      const $clip    = $root.find('.gp-wlc__clip');
+      const $divider = $root.find('.gp-wlc__divider');
+      const $cta     = $root.find('.gp-wlc__cta');
+
+      function setClip(pct){
+        const pctSafe = Math.min(Math.max(pct, 0), 1) * 100;
+        $clip.css('width', pctSafe + '%');
+        $divider.css('left', pctSafe + '%');
+      }
+
+      function setLossInstant($el, value){
+        const prev = $el.data('wlcAnimFrame');
+        if (prev) {
+          cancelAnimationFrame(prev);
+          $el.removeData('wlcAnimFrame');
+        }
+        $el.text('-' + value);
+      }
+
+      let lastValue = clampToRange(current);
+
+      function updateUI(value, options){
+        const opts = $.extend({
+          updateSlider: true,
+          animateLoss: true,
+          clipPct: null
+        }, options);
+
+        const clamped = clampToRange(value);
+        if (opts.updateSlider && $slider.data('ui-slider')) {
+          $slider.slider('value', clamped);
+        }
+
+        $weight.text(clamped);
+        $slider.attr('aria-valuenow', clamped);
+
+        const potential = Math.round(clamped * 0.15);
+        if (opts.animateLoss && clamped !== lastValue) {
+          animateNumber($loss, potential, 400);
+        } else {
+          setLossInstant($loss, potential);
+        }
+
+        const pct = opts.clipPct !== null
+          ? opts.clipPct
+          : (hasRange ? 1 - safePct(clamped) : 0);
+        setClip(pct);
+
+        $cta.attr('data-weight', clamped);
+        lastValue = clamped;
+      }
   
       // jQuery UI Slider for weight input
       $slider.slider({
@@ -80,45 +128,47 @@
         value: clampToRange(current),
         slide: function(_e, ui){
           const value = clampToRange(ui.value);
-          $weight.text(value);
-          $slider.attr('aria-valuenow', value);
-          // Calculate potential weight loss: 15% of current weight
-          const potential = Math.round(value * 0.15);
-          animateNumber($loss, potential, 400);
-
-          // Move before/after mask proportionally: center at 50%, but reflect position
-          const pct = safePct(value);
-          $clip.css('width', (pct*100) + '%');
-          $divider.css('left', (pct*100) + '%');
-
-          // Persist selected weight on the CTA for funnel tracking
-          $cta.attr('data-weight', value);
+          updateUI(value, {
+            updateSlider: false,
+            animateLoss: true
+          });
         }
       });
 
       // Initialize display values on load
       const initialValue = clampToRange(current);
-      const initPotential = Math.round(initialValue * 0.15);
-      $weight.text(initialValue);
-      $loss.text('-' + initPotential);
-      const initPct = safePct(initialValue);
-      $clip.css('width', (initPct*100) + '%');
-      $divider.css('left', (initPct*100) + '%');
-      $cta.attr('data-weight', initialValue);
-  
+      updateUI(initialValue, { animateLoss: false });
+
       // Before/after scrub — drag knob horizontally inside the visual container
       let dragging = false;
-      $divider.on('mousedown touchstart', function(e){ dragging = true; e.preventDefault(); });
-  
-      $(window).on('mousemove touchmove', function(e){
-        if(!dragging) return;
-        const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      function updateFromPointer(e){
+        const touch = e.touches && e.touches[0];
+        const clientX = touch ? touch.clientX : e.clientX;
         const rect = $visual[0].getBoundingClientRect();
         const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-        const pct = x / rect.width;
-        $clip.css('width', (pct*100) + '%');
-        $divider.css('left', (pct*100) + '%');
-      }).on('mouseup touchend', function(){ dragging = false; });
+        const pct = rect.width ? (x / rect.width) : 0;
+        const valueFromPct = hasRange
+          ? (min + (1 - pct) * (max - min))
+          : min;
+        updateUI(valueFromPct, {
+          animateLoss: false,
+          clipPct: pct
+        });
+      }
+
+      function startDrag(e){
+        dragging = true;
+        updateFromPointer(e);
+        e.preventDefault();
+      }
+
+      $divider.on('mousedown touchstart', startDrag);
+      $visual.on('mousedown touchstart', startDrag);
+
+      $(window).on('mousemove touchmove', function(e){
+        if(!dragging) return;
+        updateFromPointer(e);
+      }).on('mouseup touchend touchcancel', function(){ dragging = false; });
   
       // Optional: click-through capture of weight (example use — replace with your analytics/funnel code)
       $cta.on('click', function(){
