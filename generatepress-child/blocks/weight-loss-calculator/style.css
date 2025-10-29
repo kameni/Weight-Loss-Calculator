@@ -2,7 +2,7 @@
   .gp-wlc {
     --gp-wlc-pad: clamp(16px, 3vw, 28px);
     --gp-wlc-radius: 18px;
-    --gp-wlc-bg: linear-gradient(135deg,#f6a27b 0%, #f46f6f 100%);
+    --gp-wlc-bg: linear-gradient(135deg,#FFBB8E 0%, #F0532C 100%);
     --gp-wlc-accent: #ba2365;
     background: var(--gp-wlc-bg);
     border-radius: var(--gp-wlc-radius);
@@ -39,7 +39,7 @@
     background: #fff;
     width: 100%;
     max-width: 480px;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
   }
   .gp-wlc__after,
   .gp-wlc__clip {
@@ -139,12 +139,11 @@
   .gp-wlc__label {
     position: absolute;
     bottom: clamp(16px, 2.5vw, 28px);
-    padding: clamp(6px, 1vw, 10px) clamp(18px, 2.6vw, 26px);
+    padding: 4px 12px;
     border-radius: 999px;
-    font-size: clamp(12px, 1.6vw, 15px);
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    text-transform: capitalize;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -155,6 +154,7 @@
     color: #3e3d42;
     background: rgba(255,255,255,0.92);
     box-shadow: 0 6px 18px rgba(24, 27, 44, 0.15);
+    border: 1px solid #3B3B3A;
   }
   .gp-wlc__label--after  {
     right: clamp(14px, 3vw, 24px);
@@ -166,7 +166,10 @@
   /* Controls */
   .gp-wlc__heading {
     line-height: 1.1;
-    margin: 0 0 12px 0;
+    margin: 0 auto 12px auto;
+    width: 454px;
+    text-align: center;
+    font-weight: 500;
   }
   
   .gp-wlc__field { margin: 10px 0 18px; }
