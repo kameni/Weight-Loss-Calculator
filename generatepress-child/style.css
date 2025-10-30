@@ -41,17 +41,19 @@ transition: all 0.3s ease;
     background: #92245A;
     color: #ffffff;
     width: 100%;
-    padding: 64px 16px 88px;
+    padding: clamp(56px, 8vw, 112px) 0;
     position: relative;
     overflow: hidden;
 }
 
 .wlc-product-slider__inner {
-    max-width: 1180px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 32px;
+    width: 100%;
+    padding: 0 clamp(16px, 6vw, 112px);
+    box-sizing: border-box;
 }
 
 .wlc-product-slider__pre-text {
@@ -86,12 +88,12 @@ transition: all 0.3s ease;
 
 .wlc-product-slider__viewport {
     position: relative;
-    padding: 0 56px;
+    width: 100%;
 }
 
 .wlc-product-slider__track {
     display: flex;
-    gap: 32px;
+    gap: clamp(16px, 2vw, 32px);
     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
 }
@@ -99,7 +101,7 @@ transition: all 0.3s ease;
 .wlc-product-slider__slide {
     flex: 0 0 100%;
     box-sizing: border-box;
-    padding: 0 4px;
+    padding: 0 clamp(4px, 1vw, 12px);
 }
 
 .wlc-product-card {
@@ -109,8 +111,8 @@ transition: all 0.3s ease;
     color: #47132F;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 32px 28px 36px;
+    gap: 28px;
+    padding: clamp(28px, 4vw, 40px);
     position: relative;
     min-height: 100%;
 }
@@ -133,11 +135,11 @@ transition: all 0.3s ease;
 .wlc-product-card__media {
     background: linear-gradient(261.74deg, #FFB0D6 0.45%, #FFFFFF 102.39%);
     border-radius: 28px;
-    padding: 24px;
+    padding: 0;
     position: relative;
-    min-height: 220px;
+    min-height: 240px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     overflow: hidden;
 }
@@ -157,15 +159,16 @@ transition: all 0.3s ease;
 }
 
 .wlc-product-card__media img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
 .wlc-product-card__body {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
 }
 
 .wlc-product-card__title {
@@ -285,8 +288,8 @@ transition: all 0.3s ease;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.22);
@@ -311,19 +314,19 @@ transition: all 0.3s ease;
 }
 
 .wlc-product-slider__nav--prev {
-    left: 0;
+    left: clamp(8px, 4vw, 48px);
 }
 
 .wlc-product-slider__nav--next {
-    right: 0;
+    right: clamp(8px, 4vw, 48px);
 }
 
 .wlc-product-slider__dots {
-    margin-top: 36px;
+    margin-top: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 14px;
 }
 
 .wlc-product-slider__dot {
@@ -354,31 +357,58 @@ transition: all 0.3s ease;
         gap: 40px;
     }
 
-    .wlc-product-slider__viewport {
-        padding: 0 72px;
-    }
-
-    .wlc-product-slider__slide {
-        flex: 0 0 70%;
-        padding: 0 12px;
-    }
-
     .wlc-product-card {
-        padding: 36px 36px 40px;
+        flex-direction: row;
+        align-items: stretch;
+        gap: clamp(32px, 4vw, 56px);
+        padding: clamp(36px, 5vw, 64px);
+    }
+
+    .wlc-product-card__media {
+        flex: 0 0 46%;
+        min-height: clamp(320px, 42vw, 460px);
+        border-radius: 32px;
+    }
+
+    .wlc-product-card__media img {
+        object-fit: contain;
+    }
+
+    .wlc-product-card__body {
+        flex: 1 1 auto;
+        gap: clamp(18px, 2.5vw, 28px);
+    }
+
+    .wlc-product-card__title {
+        font-size: clamp(32px, 3.4vw, 52px);
+    }
+
+    .wlc-product-card__price {
+        gap: clamp(14px, 2vw, 24px);
+    }
+
+    .wlc-product-card__price-amount {
+        font-size: clamp(48px, 5vw, 68px);
+    }
+
+    .wlc-product-slider__nav {
+        width: 56px;
+        height: 56px;
     }
 }
 
-@media (min-width: 1024px) {
-    .wlc-product-slider {
-        padding: 88px 32px 112px;
+@media (min-width: 1280px) {
+    .wlc-product-slider__inner {
+        padding-left: clamp(48px, 6vw, 160px);
+        padding-right: clamp(48px, 6vw, 160px);
     }
 
-    .wlc-product-slider__viewport {
-        padding: 0 96px;
+    .wlc-product-slider__nav--prev {
+        left: clamp(24px, 5vw, 72px);
     }
 
-    .wlc-product-slider__slide {
-        flex: 0 0 55%;
+    .wlc-product-slider__nav--next {
+        right: clamp(24px, 5vw, 72px);
     }
 }
 
