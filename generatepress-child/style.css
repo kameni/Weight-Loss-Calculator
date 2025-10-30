@@ -266,26 +266,42 @@ color: #FFBB8E;
 
 
 .wlc-product-card__cta {
-    align-self: center;
+    align-self: flex-start;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 12px 24px;
+    gap: 14px;
+    padding: 12px 0px 12px 30px;
     border-radius: 999px;
     position: relative;
-    background: linear-gradient(102.19deg, #E22797 0%, #FD9651 86.29%);
+    overflow: hidden;
+    background-color: #92245A;
     box-shadow: 0px 15px 40px -4px rgba(146, 36, 90, 0.2), 0px 4px 8px -2px rgba(146, 36, 90, 0.25);
     color: #ffffff;
     font-weight: 600;
     text-decoration: none;
-    transition: padding-right 0.5s ease, box-shadow 0.5s ease, background 0.4s ease;
+    transition: padding-right 0.5s ease, box-shadow 0.5s ease, color 0.5s ease, background-color 0.5s ease;
     margin-bottom: 30px;
+    z-index: 0;
+}
+
+.wlc-product-card__cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(102.19deg, #E22797 0%, #FD9651 86.29%);
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.wlc-product-card__cta:hover::before,
+.wlc-product-card__cta:focus-visible::before {
+    opacity: 0;
 }
 
 .wlc-product-card__cta:hover,
 .wlc-product-card__cta:focus-visible {
-    padding-right: 56px;
-    background: linear-gradient(102.19deg, #FF4DA6 0%, #FFB570 86.29%);
+    padding-right: 30px;
     box-shadow: 0px 15px 40px -4px rgba(146, 36, 90, 0.14), 0px 4px 8px -2px rgba(146, 36, 90, 0.1);
     color: #ffffff;
 }
@@ -294,21 +310,23 @@ color: #FFBB8E;
     display: inline-flex;
     align-items: center;
     position: relative;
+    z-index: 1;
 }
 
 .wlc-product-card__cta-arrow {
-    display: none;
-    position: absolute;
-    right: 24px;
-    top: 50%;
-    transform: translateY(-50%);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    position: relative;
+    z-index: 1;
     font-size: 25px;
     padding-bottom: 2px;
 }
 
 .wlc-product-card__cta:hover .wlc-product-card__cta-arrow,
 .wlc-product-card__cta:focus-visible .wlc-product-card__cta-arrow {
-    display: block;
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .wlc-product-slider__nav {
