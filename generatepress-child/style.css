@@ -60,15 +60,13 @@ transition: all 0.3s ease;
 
 .wlc-product-slider__pre-text {
     align-self: center;
-    background: linear-gradient(102.19deg, #E22797 0%, #FD9651 86.29%);
     border-radius: 999px;
     padding: 10px 24px;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
     color: #ffffff;
+    border: 1px solid #ffffff;
 }
 
 .wlc-product-slider__heading {
@@ -88,11 +86,7 @@ transition: all 0.3s ease;
 }
 
 .wlc-product-slider__heading-line--accent {
-    background: linear-gradient(90deg, #FF6DB0 0%, #FFBE8E 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+color: #FFBB8E;
 }
 
 .wlc-product-slider__viewport {
