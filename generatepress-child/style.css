@@ -94,6 +94,7 @@ color: #FFBB8E;
     width: 100%;
 }
 
+
 .wlc-product-slider__track {
     display: flex;
     gap: clamp(16px, 2vw, 32px);
@@ -104,7 +105,9 @@ color: #FFBB8E;
 .wlc-product-slider__slide {
     flex: 0 0 100%;
     box-sizing: border-box;
-    padding: 0 clamp(4px, 1vw, 12px);
+    padding: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .wlc-product-card {
@@ -118,6 +121,9 @@ color: #FFBB8E;
     padding: clamp(28px, 4vw, 40px);
     position: relative;
     min-height: 100%;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 .wlc-product-card__badge {
@@ -374,7 +380,7 @@ color: #FFBB8E;
     }
 
     .wlc-product-card__media img {
-        object-fit: contain;
+        object-fit: cover;
     }
 
     .wlc-product-card__body {
