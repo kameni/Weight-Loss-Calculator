@@ -115,6 +115,7 @@
         $slider.attr('aria-valuenow', normalized);
 
         const potential = Math.round(normalized * 0.15);
+        const lossValue = -potential;
         if (opts.animateLoss && normalized !== lastValue) {
           animateNumber($loss, potential, 400);
         } else {
@@ -126,7 +127,10 @@
           : (hasRange ? 1 - safePct(normalized) : 0);
         setClip(pct);
 
-        $cta.attr('data-weight', normalized);
+        $cta.attr({
+          'data-weight': normalized,
+          'data-loss': lossValue
+        });
         lastValue = normalized;
       }
   
@@ -185,12 +189,17 @@
       $cta.on('click', function(){
         // Example: append selected weight to URL as query param if href is same-origin or '#'
         try {
-          const href = $(this).attr('href') || '#';
-          const w = $cta.attr('data-weight') || current;
+          const $link = $(this);
+          const href = $link.attr('href') || '#';
+          const w = $link.attr('data-weight') || current;
+          const l = $link.attr('data-loss');
           if (href === '#' || href.indexOf('#') === 0) return; // do nothing for placeholder links
           const u = new URL(href, window.location.origin);
           u.searchParams.set('weight', w);
-          $(this).attr('href', u.toString());
+          if (l !== undefined) {
+            u.searchParams.set('loss', l);
+          }
+          $link.attr('href', u.toString());
         } catch(_e){}
       });
     }
