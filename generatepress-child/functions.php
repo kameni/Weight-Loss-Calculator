@@ -228,8 +228,30 @@ add_shortcode('product_slider', function ($atts = []) {
                             $benefits = array_map('trim', explode('\n', $benefits_raw));
                         }
 
-                        $cta_text = get_field('cta_button_text');
-                        $cta_link = get_field('cta_link');
+                        $cta_text_raw = get_field('cta_button_text');
+                        $cta_text     = is_string($cta_text_raw) ? trim($cta_text_raw) : '';
+
+                        $cta_link_field = get_field('cta_link');
+                        $cta_url        = '';
+                        $cta_target     = '';
+
+                        if (is_array($cta_link_field)) {
+                            $cta_url    = isset($cta_link_field['url']) ? (string) $cta_link_field['url'] : '';
+                            $cta_target = isset($cta_link_field['target']) ? (string) $cta_link_field['target'] : '';
+
+                            if ($cta_text === '' && !empty($cta_link_field['title'])) {
+                                $cta_text = (string) $cta_link_field['title'];
+                            }
+                        } elseif (is_string($cta_link_field)) {
+                            $cta_url = trim($cta_link_field);
+                        }
+
+                        $cta_href = $cta_url !== '' ? $cta_url : '';
+                        $cta_rel  = '';
+
+                        if ($cta_target === '_blank') {
+                            $cta_rel = 'noopener noreferrer';
+                        }
 
                         $is_popular = get_field('popular');
                         $badge_text = get_field('badge_text');
@@ -290,8 +312,9 @@ add_shortcode('product_slider', function ($atts = []) {
                                         </ul>
                                     <?php endif; ?>
 
-                                    <?php if (!empty($cta_text) && !empty($cta_link)) : ?>
-                                        <a class="wlc-product-card__cta" href="<?php echo esc_url($cta_link); ?>">
+                                    <?php if ($cta_text !== '') : ?>
+                                        <a class="wlc-product-card__cta"
+                                           href="<?php echo esc_url($cta_href !== '' ? $cta_href : '#'); ?>"<?php echo $cta_target !== '' ? ' target="' . esc_attr($cta_target) . '"' : ''; ?><?php echo $cta_rel !== '' ? ' rel="' . esc_attr($cta_rel) . '"' : ''; ?>>
                                             <span><?php echo esc_html($cta_text); ?></span>
                                             <span class="wlc-product-card__cta-arrow" aria-hidden="true">&#8594;</span>
                                         </a>
