@@ -35,6 +35,11 @@
             let currentIndex = 0;
             let resizeTimer = null;
 
+            const visibleSlideClass = 'wlc-product-slider__slide--visible';
+            const nextSlideClass = 'wlc-product-slider__slide--next';
+            const visibleCardClass = 'wlc-product-card--visible';
+            const nextCardClass = 'wlc-product-card--next';
+
             if (dotsContainer) {
                 dotsContainer.innerHTML = '';
             }
@@ -87,10 +92,54 @@
                 }
             };
 
+            const clearSlideClasses = () => {
+                slides.forEach((slide) => {
+                    slide.classList.remove(visibleSlideClass, nextSlideClass);
+
+                    const card = slide.querySelector('.wlc-product-card');
+                    if (card) {
+                        card.classList.remove(visibleCardClass, nextCardClass);
+                    }
+                });
+            };
+
+            const applySlideClasses = () => {
+                if (!slides.length) {
+                    return;
+                }
+
+                const total = slides.length;
+                const nextIndex = total > 1 ? (currentIndex + 1) % total : -1;
+
+                const currentSlide = slides[currentIndex];
+                if (currentSlide) {
+                    currentSlide.classList.add(visibleSlideClass);
+
+                    const currentCard = currentSlide.querySelector('.wlc-product-card');
+                    if (currentCard) {
+                        currentCard.classList.add(visibleCardClass);
+                    }
+                }
+
+                if (nextIndex !== -1) {
+                    const nextSlide = slides[nextIndex];
+                    if (nextSlide) {
+                        nextSlide.classList.add(nextSlideClass);
+
+                        const nextCard = nextSlide.querySelector('.wlc-product-card');
+                        if (nextCard) {
+                            nextCard.classList.add(nextCardClass);
+                        }
+                    }
+                }
+            };
+
             const goToSlide = (index, { animate = true } = {}) => {
                 if (!slides.length) {
                     return;
                 }
+
+                clearSlideClasses();
 
                 const total = slides.length;
                 currentIndex = (index + total) % total;
@@ -110,6 +159,7 @@
                     });
                 }
 
+                applySlideClasses();
                 updateDots();
                 updateNavState();
             };
