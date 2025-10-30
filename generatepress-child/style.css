@@ -121,7 +121,7 @@ color: #FFBB8E;
     position: relative;
     min-height: 100%;
     width: 100%;
-    max-width: 1100px;
+    max-width: 1280px;
     margin: 0 auto;
     overflow: hidden;
 }
@@ -181,8 +181,7 @@ color: #FFBB8E;
 .wlc-product-card__body {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    padding: clamp(28px, 4vw, 40px);
+    padding: 50px 20px;
 }
 
 .wlc-product-card__title {
@@ -194,7 +193,10 @@ color: #FFBB8E;
 .wlc-product-card__tagline {
     margin: 0;
     font-size: 16px;
-    color: rgba(71, 19, 47, 0.8);
+    color: #3B3B3A;
+    font-weight: 500;
+    text-align: left;
+    margin-bottom: 20px;
 }
 
 .wlc-product-card__price {
@@ -206,12 +208,12 @@ color: #FFBB8E;
 
 .wlc-product-card__price-amount {
     font-size: clamp(40px, 5vw, 56px);
-    color: #47132F;
+    color: #3B3B3A;
 }
 
 .wlc-product-card__price-suffix {
     font-size: 18px;
-    color: rgba(71, 19, 47, 0.65);
+    color: #3B3B3A;
     text-transform: lowercase;
 }
 
@@ -219,8 +221,10 @@ color: #FFBB8E;
     margin: 0;
     font-size: 14px;
     letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: rgba(71, 19, 47, 0.7);
+    color: #3B3B3A;
+    line-height: 16px;
+    text-align: left;
+    margin-bottom: 40px;
 }
 
 .wlc-product-card__benefits {
@@ -230,6 +234,7 @@ color: #FFBB8E;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin-bottom: 70px;
 }
 
 .wlc-product-card__benefits li {
@@ -374,7 +379,7 @@ color: #FFBB8E;
     .wlc-product-card {
         flex-direction: row;
         align-items: stretch;
-        gap: clamp(32px, 4vw, 56px);
+        gap: 30px;
     }
 
     .wlc-product-card__media {
@@ -390,16 +395,19 @@ color: #FFBB8E;
 
     .wlc-product-card__body {
         flex: 1 1 auto;
-        gap: clamp(18px, 2.5vw, 28px);
-        padding: clamp(36px, 5vw, 64px);
+           padding: 50px 0px 20px 20px;
     }
 
     .wlc-product-card__title {
-        font-size: clamp(32px, 3.4vw, 52px);
+        font-size: 36px;
+        font-weight: 700;
+        color: #3B3B3A;
+        text-align: left;
+        max-width: 350px;
+        margin-bottom: 20px;
     }
 
     .wlc-product-card__price {
-        gap: clamp(14px, 2vw, 24px);
     }
 
     .wlc-product-card__price-amount {
