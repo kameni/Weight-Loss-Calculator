@@ -276,7 +276,8 @@ color: #FFBB8E;
     color: #ffffff;
     font-weight: 600;
     text-decoration: none;
-    transition: background 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+    transition: all 1s ease;
+    margin-bottom: 30px;
 }
 
 .wlc-product-card__cta:hover,
@@ -284,7 +285,8 @@ color: #FFBB8E;
     background: #92245A;
     padding-right: 42px;
     box-shadow: 0px 15px 40px -4px rgba(146, 36, 90, 0.14), 0px 4px 8px -2px rgba(146, 36, 90, 0.1);
-    outline: none;
+    color: #ffffff;
+    transition: all 1s ease;
 }
 
 .wlc-product-card__cta span {
@@ -295,7 +297,7 @@ color: #FFBB8E;
 .wlc-product-card__cta-arrow {
     opacity: 0;
     transform: translateX(-10px);
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 1s ease, opacity 1s ease;
 }
 
 .wlc-product-card__cta:hover .wlc-product-card__cta-arrow,
