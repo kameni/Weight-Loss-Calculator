@@ -270,7 +270,7 @@ color: #FFBB8E;
     display: inline-flex;
     align-items: center;
     gap: 14px;
-    padding: 18px 32px;
+    padding: 12px 22px;
     border-radius: 999px;
     position: relative;
     overflow: hidden;
@@ -289,7 +289,7 @@ color: #FFBB8E;
     position: absolute;
     inset: 0;
     background: linear-gradient(102.19deg, #E22797 0%, #FD9651 86.29%);
-    transition: opacity 0.45s ease;
+    transition: opacity 0.5s ease;
     pointer-events: none;
     z-index: 0;
 }
@@ -316,9 +316,11 @@ color: #FFBB8E;
 .wlc-product-card__cta-arrow {
     opacity: 0;
     transform: translateX(-10px);
-    transition: transform 1s ease, opacity 1s ease;
+    transition: transform 0.5s ease, opacity 0.5s ease;
     position: relative;
     z-index: 1;
+    font-size: 25px;
+    padding-bottom: 2px;
 }
 
 .wlc-product-card__cta:hover .wlc-product-card__cta-arrow,
