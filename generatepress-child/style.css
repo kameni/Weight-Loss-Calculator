@@ -170,11 +170,12 @@ color: #FFBB8E;
 }
 
 .wlc-product-card__media img {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     display: block;
 }
 
@@ -390,7 +391,7 @@ color: #FFBB8E;
     }
 
     .wlc-product-card__media img {
-        object-fit: contain;
+        object-fit: cover;
     }
 
     .wlc-product-card__body {
