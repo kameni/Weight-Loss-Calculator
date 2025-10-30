@@ -112,3 +112,206 @@ add_action('enqueue_block_editor_assets', function () {
         ]);
     }
 });
+
+/**
+ * Register shortcode that outputs the product slider.
+ */
+add_shortcode('product_slider', function ($atts = []) {
+    $atts = shortcode_atts([
+        'pre_text' => '',
+        'header1'  => '',
+        'header2'  => '',
+    ], $atts, 'product_slider');
+
+    $atts = array_map(static function ($value) {
+        if (is_string($value)) {
+            return trim(wp_kses_post($value));
+        }
+
+        return $value;
+    }, $atts);
+
+    $pre_text = $atts['pre_text'];
+    $header1  = $atts['header1'];
+    $header2  = $atts['header2'];
+
+    $query = new WP_Query([
+        'post_type'      => 'product',
+        'posts_per_page' => -1,
+        'orderby'        => ['menu_order' => 'ASC', 'title' => 'ASC'],
+    ]);
+
+    if (!$query->have_posts()) {
+        return '';
+    }
+
+    $script_path = get_stylesheet_directory() . '/product-slider.js';
+    wp_enqueue_script(
+        'generatepress-child-product-slider',
+        get_stylesheet_directory_uri() . '/product-slider.js',
+        [],
+        file_exists($script_path) ? filemtime($script_path) : null,
+        true
+    );
+
+    static $instance = 0;
+    $instance++;
+    $slider_id = 'wlc-product-slider-' . $instance;
+
+    ob_start();
+    ?>
+    <section class="wlc-product-slider" id="<?php echo esc_attr($slider_id); ?>" aria-label="Product options">
+        <div class="wlc-product-slider__inner">
+            <?php if ($pre_text !== '') : ?>
+                <p class="wlc-product-slider__pre-text"><?php echo wp_kses_post($pre_text); ?></p>
+            <?php endif; ?>
+
+            <?php if ($header1 !== '' || $header2 !== '') : ?>
+                <h2 class="wlc-product-slider__heading">
+                    <?php if ($header1 !== '') : ?>
+                        <span class="wlc-product-slider__heading-line wlc-product-slider__heading-line--primary"><?php echo wp_kses_post($header1); ?></span>
+                    <?php endif; ?>
+                    <?php if ($header2 !== '') : ?>
+                        <span class="wlc-product-slider__heading-line wlc-product-slider__heading-line--accent"><?php echo wp_kses_post($header2); ?></span>
+                    <?php endif; ?>
+                </h2>
+            <?php endif; ?>
+
+            <div class="wlc-product-slider__viewport">
+                <button class="wlc-product-slider__nav wlc-product-slider__nav--prev" type="button" data-action="prev" aria-label="Previous product">
+                    <span aria-hidden="true">&#8592;</span>
+                </button>
+                <div class="wlc-product-slider__track" data-slider-track>
+                    <?php
+                    $slide_index = 0;
+                    while ($query->have_posts()) :
+                        $query->the_post();
+
+                        $product_name = get_field('product_name') ?: get_the_title();
+                        $tagline      = get_field('tagline');
+                        $price_object = get_field_object('price');
+                        $price_value  = '';
+                        $price_prefix = '$';
+                        $price_suffix = '/month';
+
+                        if ($price_object) {
+                            $raw_value = isset($price_object['value']) ? $price_object['value'] : '';
+                            if ($raw_value !== '' && $raw_value !== null) {
+                                $price_value = is_numeric($raw_value)
+                                    ? number_format((float) $raw_value, (strpos((string) $raw_value, '.') !== false) ? 2 : 0, '.', ',')
+                                    : (string) $raw_value;
+                            }
+
+                            if (!empty($price_object['prepend'])) {
+                                $price_prefix = (string) $price_object['prepend'];
+                            }
+
+                            if (!empty($price_object['append'])) {
+                                $price_suffix = (string) $price_object['append'];
+                            } else {
+                                $price_suffix = '';
+                            }
+                        }
+
+                        if ($price_value === '') {
+                            $price_prefix = '';
+                            $price_suffix = '';
+                        }
+
+                        $price_text   = get_field('price_text');
+                        $benefits_raw = get_field('benefits');
+                        $benefits     = [];
+
+                        if (is_array($benefits_raw)) {
+                            $benefits = array_filter(array_map('trim', $benefits_raw));
+                        } elseif (is_string($benefits_raw) && $benefits_raw !== '') {
+                            $benefits = array_map('trim', explode('\n', $benefits_raw));
+                        }
+
+                        $cta_text = get_field('cta_button_text');
+                        $cta_link = get_field('cta_link');
+
+                        $is_popular = get_field('popular');
+                        $badge_text = get_field('badge_text');
+
+                        $image_id  = get_post_thumbnail_id();
+                        $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'large') : '';
+                        $image_alt = $image_id ? get_post_meta($image_id, '_wp_attachment_image_alt', true) : '';
+
+                        $brand_terms = get_the_terms(get_the_ID(), 'brand');
+                        $brand_name  = (!is_wp_error($brand_terms) && !empty($brand_terms)) ? $brand_terms[0]->name : '';
+
+                        $slide_index++;
+                        ?>
+                        <div class="wlc-product-slider__slide" data-slide-index="<?php echo esc_attr($slide_index - 1); ?>">
+                            <article class="wlc-product-card" aria-roledescription="slide" aria-label="<?php echo esc_attr($product_name); ?>">
+                                <?php if ($is_popular && !empty($badge_text)) : ?>
+                                    <span class="wlc-product-card__badge"><?php echo esc_html($badge_text); ?></span>
+                                <?php endif; ?>
+
+                                <div class="wlc-product-card__media">
+                                    <?php if (!empty($brand_name)) : ?>
+                                        <span class="wlc-product-card__brand"><?php echo esc_html($brand_name); ?></span>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($image_url)) : ?>
+                                        <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt ?: $product_name); ?>" loading="lazy" />
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="wlc-product-card__body">
+                                    <h3 class="wlc-product-card__title"><?php echo esc_html($product_name); ?></h3>
+
+                                    <?php if (!empty($tagline)) : ?>
+                                        <p class="wlc-product-card__tagline"><?php echo esc_html($tagline); ?></p>
+                                    <?php endif; ?>
+
+                                    <?php if ($price_value !== '') : ?>
+                                        <div class="wlc-product-card__price">
+                                            <span class="wlc-product-card__price-amount"><?php echo esc_html(trim($price_prefix . $price_value)); ?></span>
+                                            <?php if (!empty($price_suffix)) : ?>
+                                                <span class="wlc-product-card__price-suffix"><?php echo esc_html($price_suffix); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($price_text)) : ?>
+                                        <p class="wlc-product-card__price-text"><?php echo esc_html($price_text); ?></p>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($benefits)) : ?>
+                                        <ul class="wlc-product-card__benefits">
+                                            <?php foreach ($benefits as $benefit) : ?>
+                                                <li>
+                                                    <span aria-hidden="true"></span>
+                                                    <span><?php echo esc_html($benefit); ?></span>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($cta_text) && !empty($cta_link)) : ?>
+                                        <a class="wlc-product-card__cta" href="<?php echo esc_url($cta_link); ?>">
+                                            <span><?php echo esc_html($cta_text); ?></span>
+                                            <span class="wlc-product-card__cta-arrow" aria-hidden="true">&#8594;</span>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </article>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+                <button class="wlc-product-slider__nav wlc-product-slider__nav--next" type="button" data-action="next" aria-label="Next product">
+                    <span aria-hidden="true">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="wlc-product-slider__dots" role="tablist" aria-label="Product selection"></div>
+        </div>
+    </section>
+    <?php
+
+    wp_reset_postdata();
+
+    return (string) ob_get_clean();
+});
