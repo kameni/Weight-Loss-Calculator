@@ -30,7 +30,7 @@ The **Weight Loss Calculator** project is a purpose-built child theme for [Gener
 
 ### Prepare Product Content
 The `[product_slider]` shortcode queries the `product` post type and orders entries by the numeric `order` meta key. Ensure that:
-- A `product` custom post type (from WooCommerce or your own registration) exists.
+- A `product` custom post type (ACF) exists.
 - Each product you want to feature has an `order` custom field (lower numbers surface first).
 
 ### Register the Product Fields
