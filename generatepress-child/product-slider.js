@@ -19,6 +19,7 @@
 
         sliders.forEach((slider) => {
             const track = slider.querySelector('[data-slider-track]');
+            const viewport = slider.querySelector('.wlc-product-slider__viewport');
             if (!track) {
                 return;
             }
@@ -134,6 +135,31 @@
                 }
             };
 
+            const updateNextCardLayout = () => {
+                if (!viewport || !slides.length) {
+                    slider.classList.remove('wlc-product-slider--show-next-card');
+                    slider.style.removeProperty('--wlc-next-card-offset');
+                    return;
+                }
+
+                const currentSlide = slides[currentIndex];
+                const currentCard = currentSlide ? currentSlide.querySelector('.wlc-product-card') : null;
+                if (!currentCard) {
+                    slider.classList.remove('wlc-product-slider--show-next-card');
+                    slider.style.removeProperty('--wlc-next-card-offset');
+                    return;
+                }
+
+                const viewportWidth = viewport.clientWidth;
+                const cardWidth = currentCard.offsetWidth;
+                const nextOffset = cardWidth + 50;
+
+                slider.style.setProperty('--wlc-next-card-offset', `${nextOffset}px`);
+
+                const shouldShowNext = slides.length > 1 && viewportWidth > nextOffset;
+                slider.classList.toggle('wlc-product-slider--show-next-card', shouldShowNext);
+            };
+
             const goToSlide = (index, { animate = true } = {}) => {
                 if (!slides.length) {
                     return;
@@ -160,6 +186,7 @@
                 }
 
                 applySlideClasses();
+                updateNextCardLayout();
                 updateDots();
                 updateNavState();
             };
