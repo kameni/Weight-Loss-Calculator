@@ -98,6 +98,14 @@ color: #FFBB8E;
     padding: 0;
 }
 
+.wlc-product-slider__viewport,
+.wlc-product-slider__track,
+.wlc-product-slider__slide,
+.wlc-product-card {
+    touch-action: pan-y;
+    -ms-touch-action: pan-y;
+}
+
 
 .wlc-product-slider__track {
     display: flex;
