@@ -45,8 +45,9 @@ Weight-Loss-Calculator/
    - Registers the block using its `block.json` manifest.
    - Registers/enqueues front-end scripts listed in `frontend.asset.php`, ensuring `jquery-ui-touch-punch` is available for touch dragging.
    - Associates the registered script handle with the block’s `view_script_handles` for on-demand loading.
-3. **Editor assets:** `enqueue_block_editor_assets` ensures `jquery`, `jquery-ui-slider`, the block’s editor script, and an inline localization (`generatepressChildWlc`) are available in the block editor.
-4. **Front-end slider assets:** The product slider shortcode enqueues `product-slider.js` on-demand when the shortcode is rendered.
+3. **Shared assets:** `enqueue_block_assets` conditionally loads the jQuery UI base stylesheet on the front end when a calculator block is present on the current singular post.
+4. **Editor assets:** `enqueue_block_editor_assets` ensures `jquery`, `jquery-ui-slider`, the block’s editor script, and an inline localization (`generatepressChildWlc`) are available in the block editor.
+5. **Front-end slider assets:** The product slider shortcode enqueues `product-slider.js` on-demand when the shortcode is rendered.
 
 ## Gutenberg Block Architecture
 ### block.json
@@ -90,7 +91,7 @@ Registered in `functions.php` as `[product_slider]`.
 ### Query & Data Preparation
 - Runs a `WP_Query` against the `product` post type with optional limit and meta-based ordering (`order` meta key).
 - Sanitizes shortcode attributes and fallback defaults.
-- Reads display data from ACF field helpers (`get_field`, `get_field_object`). If the plugin is absent, the helpers return `null` and the shortcode falls back to core metadata.
+- Reads display data from ACF field helpers (`get_field`, `get_field_object`). The shortcode assumes ACF is active; without it the PHP helpers are undefined and execution will fatal. Provide compatibility shims before loading the theme if you need to run without ACF.
 - Captures featured image, brand/category terms, and builds CTA metadata (`href`, `target`, `rel`).
 
 ### Markup & Identifiers
@@ -123,6 +124,7 @@ Registered in `functions.php` as `[product_slider]`.
 3. Run `wp-scripts build` (or your preferred bundler) to regenerate `.asset.php` dependencies if you author the scripts with ESNext modules.
 
 ### Customizing the Slider Query
+- The shortcode targets the `product` post type and orders entries by the numeric `order` meta key. Populate that meta value to control slide sequencing.
 - Use WordPress filters to intercept the slider output, e.g.
   ```php
   add_filter('wlc_product_slider_query_args', function($args, $atts) {

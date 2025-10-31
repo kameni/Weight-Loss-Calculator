@@ -15,7 +15,7 @@ The **Weight Loss Calculator** project is a purpose-built child theme for [Gener
 | WordPress | 6.5 or newer (tested up to 6.8) |
 | PHP       | 7.4+ (matches theme header requirements) |
 | Parent theme | [GeneratePress](https://generatepress.com/) 3.x installed and active |
-| Plugins   | *Recommended:* [Advanced Custom Fields](https://www.advancedcustomfields.com/) for product metadata |
+| Plugins   | [Advanced Custom Fields](https://www.advancedcustomfields.com/) (required for the product slider) |
 | Browser support | Modern evergreen browsers; graceful fallbacks for reduced-motion preferences |
 
 ## Installation & Setup
@@ -24,9 +24,14 @@ The **Weight Loss Calculator** project is a purpose-built child theme for [Gener
    - Copy the `generatepress-child` directory into `wp-content/themes/`, or
    - Zip the folder and upload it via Appearance → Themes → Add New → Upload.
 3. **Activate the child theme** from the Themes screen.
-4. **Install supporting plugins** (optional but recommended):
-   - Advanced Custom Fields for product field management.
+4. **Install supporting plugins**:
+   - Advanced Custom Fields (ACF) – the slider markup calls `get_field()` helpers directly, so keep the plugin active to avoid fatal errors.
 5. **Flush caches** (if applicable) to ensure new scripts and styles are served.
+
+### Prepare Product Content
+The `[product_slider]` shortcode queries the `product` post type and orders entries by the numeric `order` meta key. Ensure that:
+- A `product` custom post type (from WooCommerce or your own registration) exists.
+- Each product you want to feature has an `order` custom field (lower numbers surface first).
 
 ### Register the Product Fields
 If you plan to use the product slider, create ACF fields (or equivalent meta fields) with the following keys on your product post type:
@@ -59,7 +64,7 @@ The slider will automatically read featured images, taxonomy terms (`brand`, `pr
 - Motion-sensitive users benefit from reduced animation when `prefers-reduced-motion` is detected.
 
 ## Using the Product Slider Shortcode
-Embed the shortcode anywhere shortcodes are supported (classic editor, blocks, widgets):
+Embed the shortcode anywhere shortcodes are supported (classic editor, blocks, widgets). Create at least one published `product` post so the query returns data:
 
 ```text
 [product_slider pre_text="Programs" header1="Choose your plan" header2="Tailored to you" limit="3"]
