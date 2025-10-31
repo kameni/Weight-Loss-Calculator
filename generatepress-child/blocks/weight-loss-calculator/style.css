@@ -326,6 +326,8 @@
   @media (max-width: 600px) {
     .gp-wlc {
       --gp-wlc-pad: clamp(20px, 6vw, 28px);
+      margin-left: 15px;
+      margin-right: 15px;
     }
 
     .gp-wlc__controls {
