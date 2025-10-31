@@ -383,13 +383,16 @@ color: #FFBB8E;
     border-radius: 50%;
     border: none;
     background: #250916;
-    
-    cursor: pointer;
+        cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: background 0.3s ease, transform 0.3s ease;
     z-index: 2;
+}
+
+.wlc-product-slider__nav:focus {
+    background: #250916;
 }
 
 .wlc-product-slider__nav:hover,
@@ -501,12 +504,12 @@ color: #FFBB8E;
     }
 
     .wlc-product-slider__nav--prev {
-        left: 0;
+        left: 22px;
         transform: translate(calc(-100% - 24px), -50%);
     }
 
     .wlc-product-slider__nav--next {
-        right: 0;
+        right: 22px;
         transform: translate(calc(100% + 24px), -50%);
     }
 }
