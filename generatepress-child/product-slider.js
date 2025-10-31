@@ -35,6 +35,25 @@
             const dots = [];
             let currentIndex = 0;
             let resizeTimer = null;
+            let currentTranslate = 0;
+            let isTouchDragging = false;
+            let dragStartX = 0;
+            let dragInitialTranslate = 0;
+            let dragPreventClick = false;
+            let activePointerId = null;
+
+            const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
+
+            const preventClickHandler = (event) => {
+                if (!dragPreventClick) {
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopPropagation();
+            };
+
+            slider.addEventListener('click', preventClickHandler, true);
 
             const visibleSlideClass = 'wlc-product-slider__slide--visible';
             const nextSlideClass = 'wlc-product-slider__slide--next';
@@ -236,7 +255,8 @@
                 updateNextCardLayout();
 
                 const offset = slides[currentIndex].offsetLeft;
-                track.style.transform = `translateX(-${offset}px)`;
+                currentTranslate = -offset;
+                track.style.transform = `translateX(${currentTranslate}px)`;
 
                 if (!animate || prefersReducedMotion) {
                     requestAnimationFrame(() => {
@@ -274,6 +294,145 @@
                     }
                 });
             });
+
+            const startDrag = (clientX) => {
+                if (!track || !isMobileViewport()) {
+                    return false;
+                }
+
+                isTouchDragging = true;
+                dragStartX = clientX;
+                dragInitialTranslate = currentTranslate;
+                dragPreventClick = false;
+
+                track.style.transition = 'none';
+                return true;
+            };
+
+            const moveDrag = (clientX) => {
+                if (!isTouchDragging || !track) {
+                    return;
+                }
+
+                const delta = clientX - dragStartX;
+
+                if (!dragPreventClick && Math.abs(delta) > 5) {
+                    dragPreventClick = true;
+                }
+
+                const nextTranslate = dragInitialTranslate + delta;
+                currentTranslate = nextTranslate;
+                track.style.transform = `translateX(${nextTranslate}px)`;
+            };
+
+            const finishDrag = (clientX, cancelled = false) => {
+                if (!isTouchDragging || !track) {
+                    return;
+                }
+
+                isTouchDragging = false;
+
+                const delta = cancelled ? 0 : clientX - dragStartX;
+                const threshold = 50;
+
+                track.style.transition = '';
+
+                if (Math.abs(delta) >= threshold) {
+                    if (delta < 0) {
+                        goToSlide(currentIndex + 1);
+                    } else {
+                        goToSlide(currentIndex - 1);
+                    }
+                } else {
+                    goToSlide(currentIndex);
+                }
+
+                if (dragPreventClick) {
+                    window.setTimeout(() => {
+                        dragPreventClick = false;
+                    }, 0);
+                }
+            };
+
+            const handlePointerDown = (event) => {
+                if (event.pointerType && event.pointerType !== 'touch') {
+                    return;
+                }
+
+                if (!startDrag(event.clientX)) {
+                    return;
+                }
+
+                activePointerId = event.pointerId;
+                const target = event.currentTarget;
+                target.setPointerCapture?.(event.pointerId);
+            };
+
+            const handlePointerMove = (event) => {
+                if (activePointerId !== event.pointerId) {
+                    return;
+                }
+
+                moveDrag(event.clientX);
+            };
+
+            const handlePointerEnd = (event) => {
+                if (activePointerId !== event.pointerId) {
+                    return;
+                }
+
+                const target = event.currentTarget;
+                target.releasePointerCapture?.(event.pointerId);
+                activePointerId = null;
+
+                finishDrag(event.clientX, event.type === 'pointercancel');
+            };
+
+            const handleTouchStart = (event) => {
+                if (!event.touches || !event.touches.length) {
+                    return;
+                }
+
+                if (!startDrag(event.touches[0].clientX)) {
+                    return;
+                }
+
+                activePointerId = 'touch';
+            };
+
+            const handleTouchMove = (event) => {
+                if (!event.touches || !event.touches.length || activePointerId !== 'touch') {
+                    return;
+                }
+
+                moveDrag(event.touches[0].clientX);
+            };
+
+            const handleTouchEnd = (event) => {
+                if (activePointerId !== 'touch') {
+                    return;
+                }
+
+                const touch = event.changedTouches && event.changedTouches[0];
+                const clientX = touch ? touch.clientX : dragStartX;
+                activePointerId = null;
+
+                finishDrag(clientX, event.type === 'touchcancel');
+            };
+
+            if (viewport) {
+                if (window.PointerEvent) {
+                    viewport.addEventListener('pointerdown', handlePointerDown, { passive: true });
+                    viewport.addEventListener('pointermove', handlePointerMove, { passive: true });
+                    viewport.addEventListener('pointerup', handlePointerEnd, { passive: true });
+                    viewport.addEventListener('pointercancel', handlePointerEnd, { passive: true });
+                } else {
+                    viewport.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    viewport.addEventListener('touchmove', handleTouchMove, { passive: true });
+                    viewport.addEventListener('touchend', handleTouchEnd, { passive: true });
+                    viewport.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+                }
+            }
 
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
