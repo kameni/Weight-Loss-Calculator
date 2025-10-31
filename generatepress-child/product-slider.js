@@ -152,11 +152,14 @@
 
                 const viewportWidth = viewport.clientWidth;
                 const cardWidth = currentCard.offsetWidth;
-                const nextOffset = cardWidth + 50;
+                const peekPadding = 120;
+                const maxOffset = Math.max(0, viewportWidth - peekPadding);
+                const desiredOffset = cardWidth + 50;
+                const nextOffset = Math.min(desiredOffset, maxOffset);
 
                 slider.style.setProperty('--wlc-next-card-offset', `${nextOffset}px`);
 
-                const shouldShowNext = slides.length > 1 && viewportWidth > nextOffset;
+                const shouldShowNext = slides.length > 1 && viewportWidth > peekPadding && viewportWidth > nextOffset;
                 slider.classList.toggle('wlc-product-slider--show-next-card', shouldShowNext);
             };
 
