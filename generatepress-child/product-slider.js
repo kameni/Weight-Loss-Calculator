@@ -39,6 +39,8 @@
             let isTouchDragging = false;
             let dragStartX = 0;
             let dragInitialTranslate = 0;
+            let dragStartY = 0;
+            let dragDirection = null;
             let dragPreventClick = false;
             let activePointerId = null;
 
@@ -295,29 +297,50 @@
                 });
             });
 
-            const startDrag = (clientX) => {
+            const startDrag = (clientX, clientY = 0) => {
                 if (!track || !isMobileViewport()) {
                     return false;
                 }
 
                 isTouchDragging = true;
                 dragStartX = clientX;
+                dragStartY = clientY;
                 dragInitialTranslate = currentTranslate;
                 dragPreventClick = false;
+                dragDirection = null;
 
                 track.style.transition = 'none';
                 return true;
             };
 
-            const moveDrag = (clientX) => {
+            const moveDrag = (clientX, clientY = null, originalEvent = null) => {
                 if (!isTouchDragging || !track) {
                     return;
                 }
 
-                const delta = clientX - dragStartX;
+                const deltaX = clientX - dragStartX;
+                const deltaY = clientY === null ? 0 : clientY - dragStartY;
+
+                if (!dragDirection) {
+                    if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                        dragDirection = 'horizontal';
+                    } else if (Math.abs(deltaY) > 10) {
+                        dragDirection = 'vertical';
+                    }
+                }
+
+                if (dragDirection === 'vertical') {
+                    return;
+                }
+
+                const delta = deltaX;
 
                 if (!dragPreventClick && Math.abs(delta) > 5) {
                     dragPreventClick = true;
+                }
+
+                if (dragDirection === 'horizontal' && originalEvent && originalEvent.cancelable) {
+                    originalEvent.preventDefault();
                 }
 
                 const nextTranslate = dragInitialTranslate + delta;
@@ -331,6 +354,7 @@
                 }
 
                 isTouchDragging = false;
+                dragDirection = null;
 
                 const delta = cancelled ? 0 : clientX - dragStartX;
                 const threshold = 50;
@@ -359,7 +383,7 @@
                     return;
                 }
 
-                if (!startDrag(event.clientX)) {
+                if (!startDrag(event.clientX, event.clientY)) {
                     return;
                 }
 
@@ -373,7 +397,7 @@
                     return;
                 }
 
-                moveDrag(event.clientX);
+                moveDrag(event.clientX, event.clientY, event);
             };
 
             const handlePointerEnd = (event) => {
@@ -393,7 +417,8 @@
                     return;
                 }
 
-                if (!startDrag(event.touches[0].clientX)) {
+                const touch = event.touches[0];
+                if (!startDrag(touch.clientX, touch.clientY)) {
                     return;
                 }
 
@@ -405,7 +430,8 @@
                     return;
                 }
 
-                moveDrag(event.touches[0].clientX);
+                const touch = event.touches[0];
+                moveDrag(touch.clientX, touch.clientY, event);
             };
 
             const handleTouchEnd = (event) => {
@@ -423,12 +449,12 @@
             if (viewport) {
                 if (window.PointerEvent) {
                     viewport.addEventListener('pointerdown', handlePointerDown, { passive: true });
-                    viewport.addEventListener('pointermove', handlePointerMove, { passive: true });
+                    viewport.addEventListener('pointermove', handlePointerMove, { passive: false });
                     viewport.addEventListener('pointerup', handlePointerEnd, { passive: true });
                     viewport.addEventListener('pointercancel', handlePointerEnd, { passive: true });
                 } else {
                     viewport.addEventListener('touchstart', handleTouchStart, { passive: true });
-                    viewport.addEventListener('touchmove', handleTouchMove, { passive: true });
+                    viewport.addEventListener('touchmove', handleTouchMove, { passive: false });
                     viewport.addEventListener('touchend', handleTouchEnd, { passive: true });
                     viewport.addEventListener('touchcancel', handleTouchEnd, { passive: true });
                 }
