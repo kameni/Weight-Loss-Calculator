@@ -200,7 +200,9 @@ color: #FFBB8E;
     }
 
     .wlc-product-slider__nav {
-        display: none;
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 10px !important;
     }
 
     .wlc-product-slider__dots {
@@ -235,14 +237,14 @@ color: #FFBB8E;
         gap: 6px;
         font-size: 11px;
         height: auto;
-        margin: 8px 20px 0;
+        margin: 0;
         border-radius: 999px;
         padding: 12px 20px;
     }
 
     .wlc-product-card__body {
         order: 1;
-        padding: 36px 20px 40px;
+        padding: 50px 20px 0px !important;
     }
 
     .wlc-product-card__media {
@@ -251,29 +253,49 @@ color: #FFBB8E;
     }
 
     .wlc-product-card__title {
-        font-size: clamp(24px, 7vw, 32px);
-        margin-bottom: 16px;
+        font-size: 24px !important;
+        margin-bottom: 10px !important;
+        margin-top: 20px !important;
+        font-weight: 700;
     }
 
     .wlc-product-card__tagline {
-        font-size: 15px;
-        margin-bottom: 16px;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        margin-bottom: 10px !important;
     }
 
     .wlc-product-card__price-text {
-        margin-bottom: 28px;
+        margin-bottom: 15px !important;
     }
 
     .wlc-product-card__benefits {
-        margin-bottom: 40px;
+        margin-bottom: 30px !important;
+        gap: 8px !important;
+    }
+
+    .wlc-product-card__benefits li{
+        font-size: 14px !important;
+        line-height: 18px;
     }
 
     .wlc-product-card__cta {
         width: 100%;
         justify-content: space-between;
         padding: 14px 24px;
-        margin-bottom: 0;
+        margin-bottom: 0px !important;
     }
+    .wlc-product-card__cta span{
+     text-align: center;
+    }
+
+    .wlc-product-slider__nav--prev {
+        left: -10px !important;
+    }
+    .wlc-product-slider__nav--next {
+        right: -10px !important;
+    }
+
 }
 
 .wlc-product-card__badge {
