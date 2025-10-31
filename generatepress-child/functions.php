@@ -282,7 +282,7 @@ add_shortcode('product_slider', function ($atts = []) {
                                 <?php if ($is_popular && !empty($badge_text)) : ?>
                                     <span class="wlc-product-card__badge"><?php echo esc_html($badge_text); ?></span>
                                 <?php elseif ($category_name !== '') : ?>
-                                    <span class="wlc-product-card__badge"><?php echo esc_html(sprintf("Brand '%s'", $category_name)); ?></span>
+                                    <span class="wlc-product-card__badge"><?php echo esc_html(sprintf('Brand %s', $category_name)); ?></span>
                                 <?php endif; ?>
 
                                 <div class="wlc-product-card__media">
