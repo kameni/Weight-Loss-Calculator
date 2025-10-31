@@ -161,16 +161,16 @@
                 const desiredOffset = cardWidth + 50;
                 const nextOffset = Math.min(desiredOffset, maxOffset);
                 const peekWidth = Math.max(0, viewportWidth - nextOffset);
-                const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+                const isTabletViewport = window.matchMedia('(max-width: 768px)').matches;
                 const isNarrowViewport = window.matchMedia('(max-width: 400px)').matches;
 
-                if (isNarrowViewport) {
-                    if (slides.length <= 1) {
-                        resetNextCardLayout();
-                        return;
-                    }
+                if (slides.length <= 1) {
+                    resetNextCardLayout();
+                    return;
+                }
 
-                    const desiredPeek = 10;
+                if (isNarrowViewport) {
+                    const desiredPeek = 12;
                     const effectiveCardWidth = Math.min(cardWidth, viewportWidth);
                     const narrowPeek = Math.min(desiredPeek, Math.max(0, viewportWidth - Math.max(0, effectiveCardWidth - desiredPeek)));
 
@@ -187,7 +187,25 @@
                     return;
                 }
 
-                const shouldShowNext = !isMobileViewport && slides.length > 1 && viewportWidth > peekPadding && peekWidth > 0;
+                if (isTabletViewport) {
+                    const desiredPeek = Math.min(48, Math.max(20, viewportWidth * 0.14));
+                    const effectiveCardWidth = Math.min(cardWidth, viewportWidth);
+                    const tabletPeek = Math.min(desiredPeek, Math.max(0, viewportWidth - Math.max(0, effectiveCardWidth - desiredPeek)));
+
+                    if (tabletPeek <= 0) {
+                        resetNextCardLayout();
+                        return;
+                    }
+
+                    const tabletOffset = Math.max(0, effectiveCardWidth - tabletPeek);
+
+                    slider.style.setProperty('--wlc-next-card-offset', `${tabletOffset}px`);
+                    slider.style.setProperty('--wlc-next-card-peek', `${tabletPeek}px`);
+                    slider.classList.add('wlc-product-slider--show-next-card');
+                    return;
+                }
+
+                const shouldShowNext = slides.length > 1 && viewportWidth > peekPadding && peekWidth > 0;
 
                 if (!shouldShowNext) {
                     resetNextCardLayout();
