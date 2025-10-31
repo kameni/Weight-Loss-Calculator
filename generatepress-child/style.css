@@ -501,11 +501,13 @@ color: #FFBB8E;
     }
 
     .wlc-product-slider__nav--prev {
-        left: clamp(24px, 5vw, 72px);
+        left: 0;
+        transform: translate(calc(-100% - 24px), -50%);
     }
 
     .wlc-product-slider__nav--next {
-        right: clamp(24px, 5vw, 72px);
+        right: 0;
+        transform: translate(calc(100% + 24px), -50%);
     }
 }
 
