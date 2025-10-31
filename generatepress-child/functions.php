@@ -121,6 +121,7 @@ add_shortcode('product_slider', function ($atts = []) {
         'pre_text' => '',
         'header1'  => '',
         'header2'  => '',
+        'limit'    => '',
     ], $atts, 'product_slider');
 
     $atts = array_map(static function ($value) {
@@ -135,10 +136,22 @@ add_shortcode('product_slider', function ($atts = []) {
     $header1  = $atts['header1'];
     $header2  = $atts['header2'];
 
+    $limit_raw = $atts['limit'];
+    $limit     = -1;
+
+    if ($limit_raw !== '') {
+        $limit_value = filter_var($limit_raw, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($limit_value !== false) {
+            $limit = $limit_value;
+        }
+    }
+
     $query = new WP_Query([
         'post_type'      => 'product',
-        'posts_per_page' => -1,
-        'orderby'        => ['menu_order' => 'ASC', 'title' => 'ASC'],
+        'posts_per_page' => $limit > 0 ? $limit : -1,
+        'meta_key'       => 'order',
+        'orderby'        => ['meta_value_num' => 'ASC', 'title' => 'ASC'],
+        'order'          => 'ASC',
     ]);
 
     if (!$query->have_posts()) {
