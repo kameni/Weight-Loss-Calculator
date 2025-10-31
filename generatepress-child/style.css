@@ -127,7 +127,7 @@ color: #FFBB8E;
     position: relative;
     min-height: 100%;
     width: 100%;
-    max-width: 1280px;
+    max-width: 1063px;
     margin: 0 auto;
     overflow: hidden;
     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -140,7 +140,7 @@ color: #FFBB8E;
 .wlc-product-card--next {
     position: absolute;
     top: 0;
-    left: 100%;
+    left: 90%;
     transform: translateX(-18%);
     pointer-events: none;
 }
@@ -362,8 +362,8 @@ color: #FFBB8E;
     height: 52px;
     border-radius: 50%;
     border: none;
-    background: rgba(255, 255, 255, 0.22);
-    color: #ffffff;
+    background: #250916;
+    
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -375,6 +375,7 @@ color: #FFBB8E;
 .wlc-product-slider__nav:hover,
 .wlc-product-slider__nav:focus-visible {
     background: rgba(255, 255, 255, 0.35);
+    color: #250916;
     outline: none;
 }
 
