@@ -96,7 +96,10 @@ The slider automatically:
 ## FAQ
 
 **Can I track user selections?**
-The calculator’s CTA adds `weight` and `loss` query parameters to outbound links. Extend this in `frontend.js` to send analytics events or custom conversions.
+The calculator’s CTA adds `weight` and `loss` query parameters to outbound links. It also updates the CTA element with matching `data-weight` and `data-loss` attributes every time the visitor moves the slider, so you can read the live values from the DOM without rewriting the script. Extend the behaviour in `frontend.js` to send analytics events or custom conversions.
+
+**How is the potential weight loss calculated?**
+The default projection multiplies the normalized weight value by `0.15` (a 15 % reduction) before rounding. Adjust the `LOSS_MULTIPLIER` constant in `blocks/weight-loss-calculator/frontend.js` to change the percentage or swap in your own calculation logic.
 
 **Is there a build pipeline?**
 No build tooling ships with the project. You can edit the JavaScript/CSS directly or introduce your preferred bundler if you need advanced workflows.

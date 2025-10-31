@@ -79,7 +79,12 @@ Defines the block namespace, supported attributes, styles, editor assets, and sp
 - Initializes jQuery UI slider for weight selection with normalization, clamp logic, and real-time updates.
 - Animates the “weight loss potential” number via `requestAnimationFrame` easing.
 - Syncs the before/after scrubber by positioning the clip mask, overlay, and divider as the slider moves.
+- Stores the latest slider selections on the CTA element via `data-weight` and `data-loss` attributes for reuse by downstream integrations.
 - Enhances CTA links by appending `weight` and `loss` query parameters to outbound URLs.
+
+**Calculation details:**
+- The potential loss is derived by multiplying the normalized slider value by the `LOSS_MULTIPLIER` constant (`0.15` by default) and rounding to the nearest whole number.
+- Update the constant near the top of `frontend.js` to tune the percentage or inject alternate business logic.
 
 **Extending tips:**
 - Reuse the helper functions (`normalizeValue`, `updateUI`) when adding analytics or third-party integrations.
