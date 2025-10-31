@@ -256,6 +256,18 @@ add_shortcode('product_slider', function ($atts = []) {
                         $is_popular = get_field('popular');
                         $badge_text = get_field('badge_text');
 
+                        $category_name = '';
+                        $category_taxonomies = ['product-category', 'product_category', 'category'];
+
+                        foreach ($category_taxonomies as $taxonomy) {
+                            $category_terms = get_the_terms(get_the_ID(), $taxonomy);
+
+                            if (!is_wp_error($category_terms) && !empty($category_terms)) {
+                                $category_name = (string) $category_terms[0]->name;
+                                break;
+                            }
+                        }
+
                         $image_id  = get_post_thumbnail_id();
                         $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'large') : '';
                         $image_alt = $image_id ? get_post_meta($image_id, '_wp_attachment_image_alt', true) : '';
@@ -269,6 +281,8 @@ add_shortcode('product_slider', function ($atts = []) {
                             <article class="wlc-product-card" aria-roledescription="slide" aria-label="<?php echo esc_attr($product_name); ?>">
                                 <?php if ($is_popular && !empty($badge_text)) : ?>
                                     <span class="wlc-product-card__badge"><?php echo esc_html($badge_text); ?></span>
+                                <?php elseif ($category_name !== '') : ?>
+                                    <span class="wlc-product-card__badge"><?php echo esc_html(sprintf("Brand '%s'", $category_name)); ?></span>
                                 <?php endif; ?>
 
                                 <div class="wlc-product-card__media">
