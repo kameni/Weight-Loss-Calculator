@@ -223,19 +223,31 @@ color: #FFBB8E;
     .wlc-product-card {
         border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-    }
-
-    .wlc-product-card__media {
-        min-height: 220px;
-    }
-
-    .wlc-product-card__body {
-        padding: 36px 20px 40px;
+        align-items: stretch;
     }
 
     .wlc-product-card__badge {
+        position: static;
+        order: 0;
+        align-self: flex-start;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         font-size: 11px;
+        height: auto;
+        margin: 8px 20px 0;
+        border-radius: 999px;
         padding: 12px 20px;
+    }
+
+    .wlc-product-card__body {
+        order: 1;
+        padding: 36px 20px 40px;
+    }
+
+    .wlc-product-card__media {
+        order: 2;
+        min-height: 220px;
     }
 
     .wlc-product-card__title {
