@@ -135,18 +135,22 @@
                 }
             };
 
+            const resetNextCardLayout = () => {
+                slider.classList.remove('wlc-product-slider--show-next-card');
+                slider.style.removeProperty('--wlc-next-card-offset');
+                slider.style.removeProperty('--wlc-next-card-peek');
+            };
+
             const updateNextCardLayout = () => {
                 if (!viewport || !slides.length) {
-                    slider.classList.remove('wlc-product-slider--show-next-card');
-                    slider.style.removeProperty('--wlc-next-card-offset');
+                    resetNextCardLayout();
                     return;
                 }
 
                 const currentSlide = slides[currentIndex];
                 const currentCard = currentSlide ? currentSlide.querySelector('.wlc-product-card') : null;
                 if (!currentCard) {
-                    slider.classList.remove('wlc-product-slider--show-next-card');
-                    slider.style.removeProperty('--wlc-next-card-offset');
+                    resetNextCardLayout();
                     return;
                 }
 
@@ -156,11 +160,18 @@
                 const maxOffset = Math.max(0, viewportWidth - peekPadding);
                 const desiredOffset = cardWidth + 50;
                 const nextOffset = Math.min(desiredOffset, maxOffset);
+                const peekWidth = Math.max(0, viewportWidth - nextOffset);
+                const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+                const shouldShowNext = !isMobileViewport && slides.length > 1 && viewportWidth > peekPadding && peekWidth > 0;
+
+                if (!shouldShowNext) {
+                    resetNextCardLayout();
+                    return;
+                }
 
                 slider.style.setProperty('--wlc-next-card-offset', `${nextOffset}px`);
-
-                const shouldShowNext = slides.length > 1 && viewportWidth > peekPadding && viewportWidth > nextOffset;
-                slider.classList.toggle('wlc-product-slider--show-next-card', shouldShowNext);
+                slider.style.setProperty('--wlc-next-card-peek', `${peekWidth}px`);
+                slider.classList.add('wlc-product-slider--show-next-card');
             };
 
             const goToSlide = (index, { animate = true } = {}) => {
@@ -179,6 +190,8 @@
                     track.style.transition = '';
                 }
 
+                updateNextCardLayout();
+
                 const offset = slides[currentIndex].offsetLeft;
                 track.style.transform = `translateX(-${offset}px)`;
 
@@ -189,7 +202,6 @@
                 }
 
                 applySlideClasses();
-                updateNextCardLayout();
                 updateDots();
                 updateNavState();
             };
