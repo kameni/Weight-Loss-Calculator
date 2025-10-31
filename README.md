@@ -5,7 +5,7 @@ The **Weight Loss Calculator** project is a purpose-built child theme for [Gener
 ## Highlights
 - **Gutenberg block:** Drag-and-drop “Weight Loss Calculator” block that combines a weight-loss estimator with a before/after image scrubber.
 - **Animated interactions:** Smooth number tweens, draggable comparison slider, and responsive layout that works from desktop to mobile.
-- **WooCommerce-ready slider:** `[product_slider]` shortcode renders a branded slider powered by WooCommerce products and Advanced Custom Fields data.
+- **Product slider:** `[product_slider]` shortcode renders a branded slider powered by Advanced Custom Fields data.
 - **Theme-friendly:** Inherits GeneratePress styling conventions while shipping focused CSS for the calculator and slider components.
 - **No build steps:** Ships with compiled JavaScript and CSS so you can install and activate immediately.
 
@@ -15,7 +15,7 @@ The **Weight Loss Calculator** project is a purpose-built child theme for [Gener
 | WordPress | 6.5 or newer (tested up to 6.8) |
 | PHP       | 7.4+ (matches theme header requirements) |
 | Parent theme | [GeneratePress](https://generatepress.com/) 3.x installed and active |
-| Plugins   | *Recommended:* [Advanced Custom Fields](https://www.advancedcustomfields.com/) for product metadata, WooCommerce (or a product CPT) for slider content |
+| Plugins   | *Recommended:* [Advanced Custom Fields](https://www.advancedcustomfields.com/) for product metadata |
 | Browser support | Modern evergreen browsers; graceful fallbacks for reduced-motion preferences |
 
 ## Installation & Setup
@@ -26,7 +26,6 @@ The **Weight Loss Calculator** project is a purpose-built child theme for [Gener
 3. **Activate the child theme** from the Themes screen.
 4. **Install supporting plugins** (optional but recommended):
    - Advanced Custom Fields for product field management.
-   - WooCommerce if you want to source slider slides from products.
 5. **Flush caches** (if applicable) to ensure new scripts and styles are served.
 
 ### Register the Product Fields
@@ -90,8 +89,6 @@ The slider automatically:
 - **Templates:** Adjust the server-rendered markup via `blocks/weight-loss-calculator/render.php` or the product slider output inside `functions.php`.
 
 ## FAQ
-**Does the block work without WooCommerce?**
-Yes. The calculator block is self-contained. Only the product slider shortcode expects WooCommerce (or a compatible “product” custom post type).
 
 **Can I track user selections?**
 The calculator’s CTA adds `weight` and `loss` query parameters to outbound links. Extend this in `frontend.js` to send analytics events or custom conversions.

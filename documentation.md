@@ -5,7 +5,7 @@ This document outlines the internal structure, dependencies, and extension point
 ## Overview
 The project is a classic WordPress child theme that augments GeneratePress with:
 - A dynamic Gutenberg block (`generatepress-child/weight-loss-calculator`) with both React-powered editor code and PHP-rendered front-end markup.
-- A shortcode-driven product slider fed by WooCommerce products and Advanced Custom Fields (ACF) metadata.
+- A shortcode-driven product slider fed by Advanced Custom Fields (ACF) metadata.
 - Supporting JavaScript and CSS delivered without a build pipeline.
 
 ### Key Technologies
@@ -88,7 +88,7 @@ Defines the block namespace, supported attributes, styles, editor assets, and sp
 Registered in `functions.php` as `[product_slider]`.
 
 ### Query & Data Preparation
-- Runs a `WP_Query` against the `product` post type (compatible with WooCommerce) with optional limit and meta-based ordering (`order` meta key).
+- Runs a `WP_Query` against the `product` post type with optional limit and meta-based ordering (`order` meta key).
 - Sanitizes shortcode attributes and fallback defaults.
 - Reads display data from ACF field helpers (`get_field`, `get_field_object`). If the plugin is absent, the helpers return `null` and the shortcode falls back to core metadata.
 - Captures featured image, brand/category terms, and builds CTA metadata (`href`, `target`, `rel`).
