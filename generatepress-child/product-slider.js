@@ -162,6 +162,31 @@
                 const nextOffset = Math.min(desiredOffset, maxOffset);
                 const peekWidth = Math.max(0, viewportWidth - nextOffset);
                 const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+                const isNarrowViewport = window.matchMedia('(max-width: 400px)').matches;
+
+                if (isNarrowViewport) {
+                    if (slides.length <= 1) {
+                        resetNextCardLayout();
+                        return;
+                    }
+
+                    const desiredPeek = 10;
+                    const effectiveCardWidth = Math.min(cardWidth, viewportWidth);
+                    const narrowPeek = Math.min(desiredPeek, Math.max(0, viewportWidth - Math.max(0, effectiveCardWidth - desiredPeek)));
+
+                    if (narrowPeek <= 0) {
+                        resetNextCardLayout();
+                        return;
+                    }
+
+                    const narrowOffset = Math.max(0, effectiveCardWidth - narrowPeek);
+
+                    slider.style.setProperty('--wlc-next-card-offset', `${narrowOffset}px`);
+                    slider.style.setProperty('--wlc-next-card-peek', `${narrowPeek}px`);
+                    slider.classList.add('wlc-product-slider--show-next-card');
+                    return;
+                }
+
                 const shouldShowNext = !isMobileViewport && slides.length > 1 && viewportWidth > peekPadding && peekWidth > 0;
 
                 if (!shouldShowNext) {

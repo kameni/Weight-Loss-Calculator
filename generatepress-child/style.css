@@ -254,6 +254,35 @@ color: #FFBB8E;
     }
 }
 
+@media (max-width: 399px) {
+    .wlc-product-slider {
+        width: 300px;
+        margin-left: 10px;
+        margin-right: auto;
+    }
+
+    .wlc-product-slider__inner {
+        align-items: flex-start;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .wlc-product-slider__viewport {
+        width: 300px;
+        max-width: 300px;
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    .wlc-product-slider__track {
+        gap: 10px;
+    }
+
+    .wlc-product-slider--show-next-card .wlc-product-card--next {
+        display: flex;
+    }
+}
+
 .wlc-product-card__badge {
     position: absolute;
     top: 0;
