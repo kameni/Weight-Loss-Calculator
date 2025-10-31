@@ -226,6 +226,8 @@ color: #FFBB8E;
         border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
         align-items: stretch;
+        min-height: 100%;
+        height: 100%;
     }
 
     .wlc-product-card__badge {
@@ -245,11 +247,15 @@ color: #FFBB8E;
     .wlc-product-card__body {
         order: 1;
         padding: 50px 20px 0px !important;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
     }
 
     .wlc-product-card__media {
         order: 2;
         min-height: 220px;
+        margin-top: auto;
     }
 
     .wlc-product-card__title {
@@ -283,7 +289,8 @@ color: #FFBB8E;
         width: 100%;
         justify-content: space-between;
         padding: 14px 24px;
-        margin-bottom: 0px !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
     }
     .wlc-product-card__cta span{
      text-align: center;
