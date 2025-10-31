@@ -178,19 +178,20 @@ color: #FFBB8E;
         align-items: stretch;
         text-align: left;
         gap: 24px;
-        padding-left: clamp(16px, 8vw, 32px);
+        padding-left: 15px;
         padding-right: clamp(16px, 8vw, 32px);
     }
 
     .wlc-product-slider__pre-text {
-        align-self: flex-start;
+        align-self: center;
         font-size: 13px;
         padding: 8px 20px;
     }
 
     .wlc-product-slider__heading {
-        align-items: flex-start;
+        align-items: center;
         gap: 4px;
+        text-align: center;
     }
 
     .wlc-product-slider__viewport {
