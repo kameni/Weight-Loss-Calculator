@@ -1,5 +1,38 @@
 <?php
 // Load child stylesheet (parent is auto-loaded by GeneratePress).
+if (!function_exists('wlc_get_site_language_name')) {
+    /**
+     * Get the full language name of the site's default locale.
+     * Returns native name when available, otherwise English name, otherwise the raw locale code.
+     */
+    function wlc_get_site_language_name()
+    {
+        $locale = get_locale();
+
+        if ('en_US' === $locale) {
+            return __('English (United States)', 'generatepress-child');
+        }
+
+        if (!function_exists('wp_get_available_translations')) {
+            require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+        }
+
+        $translations = function_exists('wp_get_available_translations') ? wp_get_available_translations() : [];
+
+        if (isset($translations[$locale])) {
+            $translation = $translations[$locale];
+            if (!empty($translation['native_name'])) {
+                return $translation['native_name'];
+            }
+            if (!empty($translation['english_name'])) {
+                return $translation['english_name'];
+            }
+        }
+
+        return $locale;
+    }
+}
+
 add_action('wp_enqueue_scripts', function () {
     $path = get_stylesheet_directory() . '/style.css';
     wp_enqueue_style('generatepress-child', get_stylesheet_uri(), [], file_exists($path) ? filemtime($path) : null);
@@ -109,6 +142,7 @@ add_action('enqueue_block_editor_assets', function () {
                 'before' => get_theme_file_uri('blocks/weight-loss-calculator/placeholders/before.jpg'),
                 'after'  => get_theme_file_uri('blocks/weight-loss-calculator/placeholders/after.jpg'),
             ],
+            'language' => sanitize_text_field(wlc_get_site_language_name()),
         ]);
     }
 });
